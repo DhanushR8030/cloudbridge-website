@@ -172,9 +172,14 @@ document.querySelectorAll('form[data-cb-form]').forEach((form) => {
 
     if (!SITE.formEndpoint) { mailFallback(); track('generate_lead', { method: 'mailto' }); btn.disabled = false; return; }
     try {
-      const res = await fetch(SITE.formEndpoint, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data),
-      });
+      const ctrl = new AbortController();
+      const timeout = setTimeout(() => ctrl.abort(), 12000);
+      let res;
+      try {
+        res = await fetch(SITE.formEndpoint, {
+          method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data), signal: ctrl.signal,
+        });
+      } finally { clearTimeout(timeout); }
       if (!res.ok) throw new Error(String(res.status));
       form.reset();
       say('Thank you - your message has been sent. We will reply shortly.');
