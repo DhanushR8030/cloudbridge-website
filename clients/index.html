@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!--#include head-common-->
+  <title>Our Clients | CloudBridge Technologies</title>
+  <meta name="description" content="The startups and growing businesses CloudBridge Technologies builds websites, apps and software for.">
+  <link rel="canonical" href="{{siteUrl}}/clients/">
+  <meta property="og:title" content="Our Clients | CloudBridge Technologies">
+  <meta property="og:description" content="The startups and growing businesses we build websites, apps and software for.">
+  <meta property="og:url" content="{{siteUrl}}/clients/">
+  <meta name="twitter:title" content="Our Clients | CloudBridge Technologies">
+  <meta name="twitter:description" content="The startups and growing businesses we build websites, apps and software for.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{siteUrl}}/" },
+      { "@type": "ListItem", "position": 2, "name": "Clients", "item": "{{siteUrl}}/clients/" }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <!--#include scene-layers-->
+  <!--#include header-->
+
+  <main id="main">
+    <section class="page-hero" style="min-height:0;padding-bottom:20px" data-shape="3" data-hero data-x="0.22" data-dim="0.85" aria-labelledby="page-title">
+      <div class="wrap">
+        <div class="hero__content">
+          <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span>Clients</nav>
+          <h1 id="page-title">Building for startups that move fast.</h1>
+          <p class="lead">We work with founders and growing businesses across web, mobile, desktop and secure systems &mdash; joining early and staying on as things grow.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:16px;padding-bottom:60px" data-shape="1" data-x="0.2" data-dim="0.3" aria-label="Our clients">
+      <div class="wrap">
+        <!--#include client-logos-->
+      </div>
+    </section>
+
+    <section class="section" data-shape="0" data-x="-0.22" data-dim="0.3" aria-labelledby="fit-title">
+      <div class="wrap split">
+        <div data-reveal>
+          <p class="eyebrow">Who we work best with</p>
+          <h2 id="fit-title">Founders who want it done properly.</h2>
+          <p class="lead" style="margin-top:24px">We take on a small number of projects at a time, so every client gets direct access to the person actually building their software &mdash; not a rotating account team.</p>
+        </div>
+        <div class="principles" data-reveal style="--d:.12s">
+          <div class="principle"><h3>Startups &amp; new businesses</h3><p>Launching a first website, app or system and want it built right from day one.</p></div>
+          <div class="principle"><h3>Growing operations</h3><p>Outgrowing spreadsheets and manual processes, ready for real software.</p></div>
+          <div class="principle"><h3>Security-conscious teams</h3><p>Need stronger access control and verification than an off-the-shelf tool offers.</p></div>
+          <div class="principle"><h3>Established businesses</h3><p>Replacing or modernising an existing website, app or desktop system.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" id="contact" data-shape="1" data-x="-0.25" data-dim="0.3" aria-labelledby="contact-title">
+      <div class="wrap cta__grid">
+        <div data-reveal>
+          <p class="eyebrow">Become a client</p>
+          <h2 id="contact-title">Tell us about your business.</h2>
+          <p class="lead">Share what you are building and where you are stuck. We will get back to you with clear next steps.</p>
+          <dl class="cta__details">
+            <div><dt>Email</dt><dd><a href="mailto:{{email}}">{{email}}</a></dd></div>
+          </dl>
+        </div>
+        <div data-reveal style="--d:.12s">
+          <!--#include contact-form-->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!--#include footer-->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

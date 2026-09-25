@@ -1,0 +1,42 @@
+<form class="form" data-cb-form novalidate>
+  <input type="hidden" name="_subject" value="New project enquiry - CloudBridge website">
+  <input type="hidden" name="_template" value="table">
+  <input type="hidden" name="_captcha" value="false">
+  <div class="form__row">
+    <label class="field">
+      <span>Your name</span>
+      <input type="text" name="name" autocomplete="name" required>
+    </label>
+    <label class="field">
+      <span>Email</span>
+      <input type="email" name="email" autocomplete="email" required>
+    </label>
+  </div>
+  <div class="form__row">
+    <label class="field">
+      <span>Phone / WhatsApp <em>(optional)</em></span>
+      <input type="tel" name="phone" autocomplete="tel">
+    </label>
+    <label class="field">
+      <span>What do you need?</span>
+      <select name="service" required>
+        <option value="" disabled selected>Select a service</option>
+        <option>Website development</option>
+        <option>Mobile app (Android / iOS)</option>
+        <option>Business software</option>
+        <option>Custom / desktop application</option>
+        <option>Not sure yet</option>
+      </select>
+    </label>
+  </div>
+  <label class="field">
+    <span>Tell us about your project</span>
+    <textarea name="message" rows="5" required></textarea>
+  </label>
+  <div class="form__hp" aria-hidden="true"><label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+  <div class="form__foot">
+    <button class="btn btn--primary" type="submit"><span>Send message</span><i class="btn__arrow" aria-hidden="true"></i></button>
+    <p class="form__note">We only use your details to reply to this enquiry. See our <a href="/privacy-policy/">privacy policy</a>.</p>
+  </div>
+  <p class="form__status" role="status" aria-live="polite"></p>
+</form>

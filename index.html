@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    try {
+      if (!location.hash && !sessionStorage.getItem('cb-seen') && !/nopreload/.test(location.search)) {
+        document.documentElement.classList.add('preloading');
+        setTimeout(function () { document.documentElement.classList.remove('preloading'); }, 9000);
+      }
+    } catch (e) {}
+  </script>
+  <script>
+    if (location.protocol === 'file:' && !document.querySelector('link[href*="app.css"]')) {
+      document.addEventListener('DOMContentLoaded', function () {
+        var b = document.createElement('div');
+        b.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#fff;color:#0a100d;font:18px/1.6 Segoe UI,Arial,sans-serif;display:grid;place-items:center;text-align:center;padding:28px';
+        b.innerHTML = '<div style="max-width:560px"><h1 style="font-size:28px;margin:0 0 14px">This is the source file, not the website</h1><p>To run the website, open a terminal in this folder and run <b>npm run dev</b>, then visit <b>http://localhost:5173</b>.<br>Or double-click <b>start-website.bat</b>.</p></div>';
+        document.body.appendChild(b);
+      });
+    }
+  </script>
+  <!--#include head-common-->
+  <title>CloudBridge Technologies | Web, Mobile &amp; Custom Software</title>
+  <meta name="description" content="CloudBridge Technologies builds fast, secure websites, Android &amp; iOS apps, desktop software and custom business systems. Start your project today.">
+  <link rel="canonical" href="{{siteUrl}}/">
+  <meta property="og:title" content="CloudBridge Technologies | Web, Mobile &amp; Custom Software">
+  <meta property="og:description" content="Websites, Android &amp; iOS apps, desktop software and custom business systems - designed, engineered and launched by one team.">
+  <meta property="og:url" content="{{siteUrl}}/">
+  <meta name="twitter:title" content="CloudBridge Technologies | Web, Mobile &amp; Custom Software">
+  <meta name="twitter:description" content="Websites, Android &amp; iOS apps, desktop software and custom business systems - designed, engineered and launched by one team.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "{{siteUrl}}/#organization",
+        "name": "CloudBridge Technologies",
+        "url": "{{siteUrl}}/",
+        "logo": "{{siteUrl}}/apple-touch-icon.png",
+        "slogan": "Building Digital Foundations",
+        "email": "{{email}}",
+        "description": "CloudBridge Technologies builds websites, Android and iOS apps, desktop software and custom business systems."
+      },
+      {
+        "@type": "WebSite",
+        "@id": "{{siteUrl}}/#website",
+        "url": "{{siteUrl}}/",
+        "name": "CloudBridge Technologies",
+        "publisher": { "@id": "{{siteUrl}}/#organization" }
+      },
+      {
+        "@type": "ItemList",
+        "name": "CloudBridge Technologies services",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Website Development", "url": "{{siteUrl}}/services/website-development/" },
+          { "@type": "ListItem", "position": 2, "name": "Mobile App Development", "url": "{{siteUrl}}/services/mobile-app-development/" },
+          { "@type": "ListItem", "position": 3, "name": "Business Software", "url": "{{siteUrl}}/services/business-software/" },
+          { "@type": "ListItem", "position": 4, "name": "Custom & Desktop Applications", "url": "{{siteUrl}}/services/custom-applications/" }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "What does CloudBridge Technologies do?", "acceptedAnswer": { "@type": "Answer", "text": "We design and build websites, Android and iOS mobile apps, desktop software and custom business systems for startups and established businesses." } },
+          { "@type": "Question", "name": "Do you build both Android and iOS apps?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. We build for Android and iOS, either as separate native apps or as a single cross-platform app, depending on what suits your product and budget." } },
+          { "@type": "Question", "name": "How long does a project take?", "acceptedAnswer": { "@type": "Answer", "text": "A business website typically takes a few weeks. Mobile apps and custom software take longer depending on scope. After a short discovery conversation we give you a realistic timeline." } },
+          { "@type": "Question", "name": "How much does a website or app cost?", "acceptedAnswer": { "@type": "Answer", "text": "Cost depends on scope, features and timeline. Once we understand your requirements we provide a written estimate so you know what to expect before work begins." } },
+          { "@type": "Question", "name": "Will my website be optimised for search engines and ads?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every site we build has clean semantic structure, fast loading, mobile-first design, proper metadata and structured data, and can be connected to Google Analytics and Google Ads conversion tracking." } },
+          { "@type": "Question", "name": "Do you provide support after launch?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. We offer maintenance and support after launch, including updates, monitoring, fixes and new features as your business grows." } }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <!--#include preloader-->
+  <a class="skip" href="#main">Skip to content</a>
+  <!--#include scene-layers-->
+  <!--#include header-->
+
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero hero--center" data-shape="0" data-hero data-fit data-x="0" data-dim="1" aria-labelledby="hero-title">
+      <div class="hero__tags" aria-hidden="true">
+        <span class="htag htag--1">Websites</span>
+        <span class="htag htag--2">Android &amp; iOS apps</span>
+        <span class="htag htag--3">Desktop software</span>
+        <span class="htag htag--4">Secure systems</span>
+      </div>
+      <div class="wrap">
+        <div class="hero__center">
+          <h1 id="hero-title">
+            <span class="line"><span>From blueprint to build&mdash;</span></span>
+            <span class="line"><span>software that <em class="grad">holds</em>.</span></span>
+          </h1>
+          <p class="lead">Websites, Android and iOS apps, desktop software and custom business systems &mdash; from the first sketch to launch and beyond.</p>
+          <div class="hero__cta">
+            <a class="btn btn--primary" href="/contact/"><span>Start a project</span><i class="btn__arrow" aria-hidden="true"></i></a>
+            <a class="btn" href="/services/"><span>Explore services</span></a>
+          </div>
+        </div>
+      </div>
+      <div class="hero__foot" aria-hidden="true">
+        <div class="wrap"><span class="hero__scroll">Scroll <i></i></span></div>
+      </div>
+    </section>
+
+    <!-- TECH BAND -->
+    <div class="band">
+      <div class="wrap band__inner">
+        <span class="band__label">Technologies we work with</span>
+        <div class="marquee" aria-label="Technologies we work with">
+          <div class="marquee__track">
+            <div class="marquee__group"><span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>PHP</span><span>WordPress</span><span>Backend Development</span><span>Responsive Web Design</span><span>Deployment &amp; Hosting</span><span>C#</span><span>.NET</span><span>Windows Forms</span><span>SQL Server</span><span>Three-Factor Authentication</span></div>
+            <div class="marquee__group" aria-hidden="true"><span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>PHP</span><span>WordPress</span><span>Backend Development</span><span>Responsive Web Design</span><span>Deployment &amp; Hosting</span><span>C#</span><span>.NET</span><span>Windows Forms</span><span>SQL Server</span><span>Three-Factor Authentication</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SERVICES TEASER -->
+    <section class="section section--tight" id="services" data-shape="1" data-x="0.22" data-dim="0.32" aria-labelledby="services-title">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">What we build</p>
+          <h2 id="services-title">Four disciplines. One connected team.</h2>
+          <p class="lead">Websites, mobile apps, business software and desktop applications &mdash; choose one, or combine them into a single product.</p>
+        </div>
+        <div class="link-row" data-reveal style="--d:.08s">
+          <a href="/services/website-development/"><span class="link-row__t">Website Development</span><span class="link-row__d">Fast websites, including 3D animated builds.</span><i class="btn__arrow" aria-hidden="true"></i></a>
+          <a href="/services/mobile-app-development/"><span class="link-row__t">Mobile App Development</span><span class="link-row__d">Android &amp; iOS apps.</span><i class="btn__arrow" aria-hidden="true"></i></a>
+          <a href="/services/business-software/"><span class="link-row__t">Business Software</span><span class="link-row__d">CRM, inventory, dashboards.</span><i class="btn__arrow" aria-hidden="true"></i></a>
+          <a href="/services/custom-applications/"><span class="link-row__t">Custom &amp; Desktop Apps</span><span class="link-row__d">Windows &amp; macOS software.</span><i class="btn__arrow" aria-hidden="true"></i></a>
+        </div>
+        <a class="btn" href="/services/" data-reveal style="--d:.12s"><span>Explore all services</span><i class="btn__arrow" aria-hidden="true"></i></a>
+      </div>
+    </section>
+
+    <!-- CLIENTS TEASER -->
+    <section class="section section--tight" id="clients-teaser" data-shape="3" data-x="0" data-dim="0.26" aria-labelledby="clients-title">
+      <div class="wrap">
+        <div class="teaser-band" data-reveal>
+          <div>
+            <p class="eyebrow">Who we work with</p>
+            <h2 id="clients-title">Building for startups that move fast.</h2>
+            <p class="lead">We work with founders and growing businesses who need software that just works &mdash; from the first release onward.</p>
+          </div>
+          <a class="btn btn--primary" href="/clients/"><span>Meet our clients</span><i class="btn__arrow" aria-hidden="true"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROCESS TEASER -->
+    <section class="section section--tight" id="process" data-shape="2" data-x="0.15" data-y="0.14" data-dim="0.4" aria-labelledby="process-title">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">How we work</p>
+          <h2 id="process-title">From idea to launch, a bridge with no gaps.</h2>
+          <p class="lead">A clear, predictable process so you always know what is happening and what comes next.</p>
+        </div>
+        <div class="step-strip" data-reveal style="--d:.08s">
+          <span><b>01</b>Discover</span><span><b>02</b>Design</span><span><b>03</b>Build</span><span><b>04</b>Launch</span><span><b>05</b>Support</span>
+        </div>
+        <a class="btn" href="/process/" data-reveal style="--d:.14s"><span>See the full process</span><i class="btn__arrow" aria-hidden="true"></i></a>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE TEASER -->
+    <section class="section section--tight" id="experience" data-shape="1" data-x="0.24" data-dim="0.26" aria-labelledby="exp-title">
+      <div class="wrap">
+        <div class="teaser-band" data-reveal>
+          <div>
+            <p class="eyebrow">Experience</p>
+            <h2 id="exp-title">3+ years, 20+ projects delivered.</h2>
+            <p class="lead">Real capability across web, desktop and security &mdash; built through work we have actually delivered.</p>
+          </div>
+          <a class="btn" href="/experience/"><span>See our experience</span><i class="btn__arrow" aria-hidden="true"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRUST STRIP -->
+    <div class="trust">
+      <span class="trust__label">Why businesses choose to build with us</span>
+      <div class="marquee" aria-label="Why businesses choose to build with us">
+        <div class="marquee__track">
+          <div class="marquee__group"><span>Fixed, written estimates</span><span>One point of contact</span><span>You own the source code</span><span>Post-launch support included</span><span>Reply within 1 business day</span><span>Direct access to your developer</span><span>Based in Coimbatore</span><span>Clear, jargon-free updates</span></div>
+          <div class="marquee__group" aria-hidden="true"><span>Fixed, written estimates</span><span>One point of contact</span><span>You own the source code</span><span>Post-launch support included</span><span>Reply within 1 business day</span><span>Direct access to your developer</span><span>Based in Coimbatore</span><span>Clear, jargon-free updates</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <section class="section" id="about" data-shape="0" data-x="-0.24" data-dim="0.3" aria-labelledby="about-title">
+      <div class="wrap">
+        <div class="split">
+          <div data-reveal>
+            <p class="eyebrow">About CloudBridge</p>
+            <h2 id="about-title">Built properly, from the ground up.</h2>
+            <p class="lead" style="margin-top:24px">CloudBridge Technologies is a software company that helps businesses move from ideas and manual work to reliable digital products.</p>
+            <p>Our name is our method: we bridge the gap between what your business needs and what technology can deliver &mdash; and we build the foundations so that what you launch today can keep growing tomorrow.</p>
+          </div>
+          <div class="principles" data-reveal style="--d:.12s">
+            <div class="principle"><h3>Performance first</h3><p>Pages and apps that load quickly and run smoothly, including on older phones and slower connections.</p></div>
+            <div class="principle"><h3>Search-ready by default</h3><p>Clean structure, fast Core Web Vitals and proper metadata, so your site can rank and your ads can convert.</p></div>
+            <div class="principle"><h3>Secure &amp; maintainable</h3><p>Sensible security practices and readable, documented code that any competent developer can pick up.</p></div>
+            <div class="principle"><h3>Clear communication</h3><p>One point of contact, regular progress updates and plain-language answers, without the jargon.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" id="faq" data-shape="3" data-x="0.27" data-dim="0.26" aria-labelledby="faq-title">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Questions</p>
+          <h2 id="faq-title">Good to know before we start.</h2>
+        </div>
+        <div class="faq" data-reveal>
+          <details><summary>What does CloudBridge Technologies do?</summary><div class="answer"><p>We design and build websites, Android and iOS mobile apps, desktop software and custom business systems for startups and established businesses.</p></div></details>
+          <details><summary>Do you build both Android and iOS apps?</summary><div class="answer"><p>Yes. We build for Android and iOS, either as separate native apps or as a single cross-platform app, depending on what suits your product and budget.</p></div></details>
+          <details><summary>How long does a project take?</summary><div class="answer"><p>A business website typically takes a few weeks. Mobile apps and custom software take longer depending on scope. After a short discovery conversation we give you a realistic timeline.</p></div></details>
+          <details><summary>How much does a website or app cost?</summary><div class="answer"><p>Cost depends on scope, features and timeline. Once we understand your requirements we provide a written estimate so you know what to expect before work begins.</p></div></details>
+          <details><summary>Will my website be optimised for search engines and ads?</summary><div class="answer"><p>Yes. Every site we build has clean semantic structure, fast loading, mobile-first design, proper metadata and structured data, and can be connected to Google Analytics and Google Ads conversion tracking.</p></div></details>
+          <details><summary>Do you provide support after launch?</summary><div class="answer"><p>Yes. We offer maintenance and support after launch, including updates, monitoring, fixes and new features as your business grows.</p></div></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="cta" id="contact" data-shape="1" data-x="-0.25" data-dim="0.3" aria-labelledby="contact-title">
+      <div class="wrap cta__grid">
+        <div data-reveal>
+          <p class="eyebrow">Start a project</p>
+          <h2 id="contact-title">Have something in mind? Let&rsquo;s build it.</h2>
+          <p class="lead">Tell us what you are building and where you are stuck. We will get back to you with clear next steps.</p>
+          <dl class="cta__details">
+            <div><dt>Email</dt><dd><a href="mailto:{{email}}">{{email}}</a></dd></div>
+          </dl>
+        </div>
+        <div data-reveal style="--d:.12s">
+          <!--#include contact-form-->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!--#include footer-->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

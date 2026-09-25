@@ -1,0 +1,13 @@
+﻿{
+  "name": "CloudBridge Technologies",
+  "short_name": "CloudBridge",
+  "description": "Websites, mobile apps, desktop software and custom business systems.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050807",
+  "theme_color": "#050807",
+  "icons": [
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
