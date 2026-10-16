@@ -10,8 +10,9 @@
     } catch (e) {}
   </script>
   <script>
-    if (location.protocol === 'file:' && !document.querySelector('link[href*="app.css"]')) {
+    if (location.protocol === 'file:') {
       document.addEventListener('DOMContentLoaded', function () {
+        if (document.querySelector('link[href*="app.css"]')) return;
         var b = document.createElement('div');
         b.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#fff;color:#0a100d;font:18px/1.6 Segoe UI,Arial,sans-serif;display:grid;place-items:center;text-align:center;padding:28px';
         b.innerHTML = '<div style="max-width:560px"><h1 style="font-size:28px;margin:0 0 14px">This is the source file, not the website</h1><p>To run the website, open a terminal in this folder and run <b>npm run dev</b>, then visit <b>http://localhost:5173</b>.<br>Or double-click <b>start-website.bat</b>.</p></div>';
@@ -40,6 +41,8 @@
         "logo": "{{siteUrl}}/apple-touch-icon.png",
         "slogan": "Building Digital Foundations",
         "email": "{{email}}",
+        "telephone": "{{phone}}",
+        "address": { "@type": "PostalAddress", "addressLocality": "Coimbatore", "addressRegion": "Tamil Nadu", "addressCountry": "IN" },
         "description": "CloudBridge Technologies is a software development company based in Coimbatore, Tamil Nadu, building websites, Android and iOS apps, desktop software and custom business systems for businesses worldwide.",
         "areaServed": "Worldwide"
       },
@@ -57,7 +60,8 @@
           { "@type": "ListItem", "position": 1, "name": "Website Development", "url": "{{siteUrl}}/services/website-development/" },
           { "@type": "ListItem", "position": 2, "name": "Mobile App Development", "url": "{{siteUrl}}/services/mobile-app-development/" },
           { "@type": "ListItem", "position": 3, "name": "Business Software", "url": "{{siteUrl}}/services/business-software/" },
-          { "@type": "ListItem", "position": 4, "name": "Custom & Desktop Applications", "url": "{{siteUrl}}/services/custom-applications/" }
+          { "@type": "ListItem", "position": 4, "name": "Custom & Desktop Applications", "url": "{{siteUrl}}/services/custom-applications/" },
+          { "@type": "ListItem", "position": 5, "name": "3D Website Development", "url": "{{siteUrl}}/services/3d-website-development/" }
         ]
       },
       {
@@ -103,8 +107,8 @@
           </div>
         </div>
       </div>
-      <div class="hero__foot" aria-hidden="true">
-        <div class="wrap"><span class="hero__scroll">Scroll <i></i></span></div>
+      <div class="hero__foot">
+        <div class="wrap"><a class="live3d" href="/services/3d-website-development/" aria-hidden="false"><i></i>Live 3D &middot; built by CloudBridge &middot; move your mouse or scroll</a><span class="hero__scroll">Scroll <i></i></span></div>
       </div>
     </section>
 
@@ -122,27 +126,57 @@
     </div>
 
     <!-- SERVICES TEASER -->
-    <section class="section section--tight" id="services" data-shape="1" data-x="0.22" data-dim="0.32" aria-labelledby="services-title">
+    <section class="section section--tight" id="services" data-shape="1" data-x="0.22" data-dim="0.14" aria-labelledby="services-title">
       <div class="wrap">
         <div class="section-head" data-reveal>
           <p class="eyebrow">What we build</p>
           <h2 id="services-title">Four disciplines. One connected team.</h2>
           <p class="lead">Websites, mobile apps, business software and desktop applications &mdash; choose one, or combine them into a single product.</p>
         </div>
-        <div class="link-row" data-reveal style="--d:.08s">
-          <a href="/services/website-development/"><span class="link-row__t">Website Development</span><span class="link-row__d">Fast websites, including 3D animated builds.</span><i class="btn__arrow" aria-hidden="true"></i></a>
-          <a href="/services/mobile-app-development/"><span class="link-row__t">Mobile App Development</span><span class="link-row__d">Android &amp; iOS apps.</span><i class="btn__arrow" aria-hidden="true"></i></a>
-          <a href="/services/business-software/"><span class="link-row__t">Business Software</span><span class="link-row__d">CRM, inventory, dashboards.</span><i class="btn__arrow" aria-hidden="true"></i></a>
-          <a href="/services/custom-applications/"><span class="link-row__t">Custom &amp; Desktop Apps</span><span class="link-row__d">Windows &amp; macOS software.</span><i class="btn__arrow" aria-hidden="true"></i></a>
+        <div class="svc-cards">
+          <a class="svc-card" href="/services/website-development/" data-reveal style="--d:0.00s"><span class="svc-card__img"><img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=900" srcset="https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&amp;fit=crop&amp;q=75&amp;w=480&amp;h=360 480w, https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&amp;fit=crop&amp;q=75&amp;w=800&amp;h=600 800w, https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=900 1200w, https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&amp;fit=crop&amp;q=75&amp;w=1600&amp;h=1200 1600w" sizes="(max-width: 640px) 100vw, (max-width: 1020px) 50vw, 25vw" width="1200" height="900" alt="Laptop showing website code on a desk" loading="lazy" decoding="async"></span><span class="svc-card__body"><span class="svc-card__t">Website Development</span><span class="svc-card__d">Fast, search-ready websites, including 3D animated builds.</span></span><i class="btn__arrow" aria-hidden="true"></i></a>
+          <a class="svc-card" href="/services/mobile-app-development/" data-reveal style="--d:0.06s"><span class="svc-card__img"><img src="https://images.unsplash.com/photo-1526498460520-4c246339dccb?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=900" srcset="https://images.unsplash.com/photo-1526498460520-4c246339dccb?auto=format&amp;fit=crop&amp;q=75&amp;w=480&amp;h=360 480w, https://images.unsplash.com/photo-1526498460520-4c246339dccb?auto=format&amp;fit=crop&amp;q=75&amp;w=800&amp;h=600 800w, https://images.unsplash.com/photo-1526498460520-4c246339dccb?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=900 1200w, https://images.unsplash.com/photo-1526498460520-4c246339dccb?auto=format&amp;fit=crop&amp;q=75&amp;w=1600&amp;h=1200 1600w" sizes="(max-width: 640px) 100vw, (max-width: 1020px) 50vw, 25vw" width="1200" height="900" alt="Smartphone showing app code" loading="lazy" decoding="async"></span><span class="svc-card__body"><span class="svc-card__t">Mobile App Development</span><span class="svc-card__d">Android &amp; iOS apps built for everyday use.</span></span><i class="btn__arrow" aria-hidden="true"></i></a>
+          <a class="svc-card" href="/services/business-software/" data-reveal style="--d:0.12s"><span class="svc-card__img"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=900" srcset="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&amp;fit=crop&amp;q=75&amp;w=480&amp;h=360 480w, https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&amp;fit=crop&amp;q=75&amp;w=800&amp;h=600 800w, https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=900 1200w, https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&amp;fit=crop&amp;q=75&amp;w=1600&amp;h=1200 1600w" sizes="(max-width: 640px) 100vw, (max-width: 1020px) 50vw, 25vw" width="1200" height="900" alt="Business dashboard with charts on a laptop" loading="lazy" decoding="async"></span><span class="svc-card__body"><span class="svc-card__t">Business Software</span><span class="svc-card__d">CRM, inventory, billing and dashboards.</span></span><i class="btn__arrow" aria-hidden="true"></i></a>
+          <a class="svc-card" href="/services/custom-applications/" data-reveal style="--d:0.18s"><span class="svc-card__img"><img src="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=900" srcset="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&amp;fit=crop&amp;q=75&amp;w=480&amp;h=360 480w, https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&amp;fit=crop&amp;q=75&amp;w=800&amp;h=600 800w, https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=900 1200w, https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&amp;fit=crop&amp;q=75&amp;w=1600&amp;h=1200 1600w" sizes="(max-width: 640px) 100vw, (max-width: 1020px) 50vw, 25vw" width="1200" height="900" alt="Developers working at desktop monitors" loading="lazy" decoding="async"></span><span class="svc-card__body"><span class="svc-card__t">Custom &amp; Desktop Apps</span><span class="svc-card__d">Windows &amp; macOS software that fits.</span></span><i class="btn__arrow" aria-hidden="true"></i></a>
         </div>
         <a class="btn" href="/services/" data-reveal style="--d:.12s"><span>Explore all services</span><i class="btn__arrow" aria-hidden="true"></i></a>
       </div>
     </section>
 
-    <!-- CLIENTS TEASER -->
-    <section class="section section--tight" id="clients-teaser" data-shape="3" data-x="0" data-dim="0.26" aria-labelledby="clients-title">
+    <!-- 3D SHOWCASE -->
+    <section class="section showcase3d" data-shape="2" data-x="0.26" data-dim="0.95" aria-labelledby="3d-title">
       <div class="wrap">
-        <div class="teaser-band" data-reveal>
+        <div class="showcase3d__text" data-reveal>
+          <p class="eyebrow">Speciality &middot; 3D websites</p>
+          <h2 id="3d-title">The 3D on this page is our work.</h2>
+          <p class="lead">Every particle on this site is drawn live in your browser with WebGL &mdash; reacting to your mouse and changing shape as you scroll. We build interactive 3D websites like this for brands that want to be remembered.</p>
+          <ul class="showcase3d__facts">
+            <li><b>46,000</b><span>particles at full detail, drawn live</span></li>
+            <li><b>4</b><span>shapes morphing on scroll</span></li>
+            <li><b>Phones</b><span>tuned to stay smooth on older devices</span></li>
+          </ul>
+          <a class="btn btn--primary" href="/services/3d-website-development/"><span>Explore 3D websites</span><i class="btn__arrow" aria-hidden="true"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="section section--tight" aria-label="CloudBridge in numbers" data-shape="1" data-x="0.22" data-dim="0.14">
+      <div class="wrap">
+        <div class="stats stats--home" data-reveal>
+          <div class="stat"><span class="stat__num">100<sup>+</sup></span><span class="stat__label">Projects delivered</span></div>
+          <div class="stat"><span class="stat__num">3<sup>+</sup></span><span class="stat__label">Years building software</span></div>
+          <div class="stat"><span class="stat__num">4</span><span class="stat__label">Platforms: web, Android, iOS, desktop</span></div>
+          <div class="stat"><span class="stat__num">1</span><span class="stat__label">Business day to reply to every enquiry</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLIENTS TEASER -->
+    <section class="section section--tight" id="clients-teaser" data-shape="3" data-x="0" data-dim="0.14" aria-labelledby="clients-title">
+      <div class="wrap">
+        <div class="teaser-band teaser-band--media" data-reveal>
+          <figure class="photo teaser-band__img"><img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=900" srcset="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&amp;fit=crop&amp;q=75&amp;w=480&amp;h=360 480w, https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&amp;fit=crop&amp;q=75&amp;w=800&amp;h=600 800w, https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=900 1200w, https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&amp;fit=crop&amp;q=75&amp;w=1600&amp;h=1200 1600w" sizes="(max-width: 860px) 100vw, 40vw" width="1200" height="900" alt="Two colleagues high-fiving across a desk after a successful project" loading="lazy" decoding="async"></figure>
           <div>
             <p class="eyebrow">Who we work with</p>
             <h2 id="clients-title">Building for startups that move fast.</h2>
@@ -153,8 +187,20 @@
       </div>
     </section>
 
+    <!-- INDUSTRIES -->
+    <section class="section section--tight" id="industries" data-shape="0" data-x="-0.2" data-dim="0.14" aria-labelledby="industries-title">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Industries</p>
+          <h2 id="industries-title">Software for the businesses that keep Coimbatore running.</h2>
+          <p class="lead">Hotels, builders, manufacturers and service businesses across Tamil Nadu use what we build every day.</p>
+        </div>
+        <!--#include industries-->
+      </div>
+    </section>
+
     <!-- PROCESS TEASER -->
-    <section class="section section--tight" id="process" data-shape="2" data-x="0.15" data-y="0.14" data-dim="0.4" aria-labelledby="process-title">
+    <section class="section section--tight" id="process" data-shape="2" data-x="0.15" data-y="0.14" data-dim="0.14" aria-labelledby="process-title">
       <div class="wrap">
         <div class="section-head" data-reveal>
           <p class="eyebrow">How we work</p>
@@ -164,17 +210,23 @@
         <div class="step-strip" data-reveal style="--d:.08s">
           <span><b>01</b>Discover</span><span><b>02</b>Design</span><span><b>03</b>Build</span><span><b>04</b>Launch</span><span><b>05</b>Support</span>
         </div>
+        <div class="mosaic">
+          <figure class="photo mosaic__a" data-reveal><img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=750" srcset="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&amp;fit=crop&amp;q=75&amp;w=480&amp;h=300 480w, https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&amp;fit=crop&amp;q=75&amp;w=800&amp;h=500 800w, https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=750 1200w, https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&amp;fit=crop&amp;q=75&amp;w=1600&amp;h=1000 1600w" sizes="(max-width: 860px) 100vw, 50vw" width="1200" height="750" alt="Team planning a project with sticky notes on a whiteboard" loading="lazy" decoding="async"></figure>
+          <figure class="photo mosaic__b" data-reveal style="--d:.06s"><img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=900" srcset="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&amp;fit=crop&amp;q=75&amp;w=480&amp;h=360 480w, https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&amp;fit=crop&amp;q=75&amp;w=800&amp;h=600 800w, https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=900 1200w, https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&amp;fit=crop&amp;q=75&amp;w=1600&amp;h=1200 1600w" sizes="(max-width: 860px) 100vw, 25vw" width="1200" height="900" alt="Designer sketching app wireframes on paper" loading="lazy" decoding="async"></figure>
+          <figure class="photo mosaic__c" data-reveal style="--d:.12s"><img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=900" srcset="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&amp;fit=crop&amp;q=75&amp;w=480&amp;h=360 480w, https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&amp;fit=crop&amp;q=75&amp;w=800&amp;h=600 800w, https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=900 1200w, https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&amp;fit=crop&amp;q=75&amp;w=1600&amp;h=1200 1600w" sizes="(max-width: 860px) 100vw, 25vw" width="1200" height="900" alt="Code editor open on a laptop in a dark room" loading="lazy" decoding="async"></figure>
+        </div>
         <a class="btn" href="/process/" data-reveal style="--d:.14s"><span>See the full process</span><i class="btn__arrow" aria-hidden="true"></i></a>
       </div>
     </section>
 
     <!-- EXPERIENCE TEASER -->
-    <section class="section section--tight" id="experience" data-shape="1" data-x="0.24" data-dim="0.26" aria-labelledby="exp-title">
+    <section class="section section--tight" id="experience" data-shape="1" data-x="0.24" data-dim="0.14" aria-labelledby="exp-title">
       <div class="wrap">
-        <div class="teaser-band" data-reveal>
+        <div class="teaser-band teaser-band--media teaser-band--flip" data-reveal>
+          <figure class="photo teaser-band__img"><img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=900" srcset="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&amp;fit=crop&amp;q=75&amp;w=480&amp;h=360 480w, https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&amp;fit=crop&amp;q=75&amp;w=800&amp;h=600 800w, https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=900 1200w, https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&amp;fit=crop&amp;q=75&amp;w=1600&amp;h=1200 1600w" sizes="(max-width: 860px) 100vw, 40vw" width="1200" height="900" alt="Team discussing work around a table with laptops" loading="lazy" decoding="async"></figure>
           <div>
             <p class="eyebrow">Experience</p>
-            <h2 id="exp-title">3+ years, 20+ projects delivered.</h2>
+            <h2 id="exp-title">3+ years, 100+ projects delivered.</h2>
             <p class="lead">Real capability across web, desktop and security &mdash; built through work we have actually delivered.</p>
           </div>
           <a class="btn" href="/experience/"><span>See our experience</span><i class="btn__arrow" aria-hidden="true"></i></a>
@@ -194,7 +246,7 @@
     </div>
 
     <!-- ABOUT -->
-    <section class="section" id="about" data-shape="0" data-x="-0.24" data-dim="0.3" aria-labelledby="about-title">
+    <section class="section" id="about" data-shape="0" data-x="-0.24" data-dim="0.14" aria-labelledby="about-title">
       <div class="wrap">
         <div class="split">
           <div data-reveal>
@@ -202,6 +254,7 @@
             <h2 id="about-title">Built properly, from the ground up.</h2>
             <p class="lead" style="margin-top:24px">CloudBridge Technologies is a software company based in Coimbatore, Tamil Nadu, helping businesses in India and around the world move from ideas and manual work to reliable digital products.</p>
             <p>Our name is our method: we bridge the gap between what your business needs and what technology can deliver &mdash; and we build the foundations so that what you launch today can keep growing tomorrow.</p>
+            <figure class="photo photo--about"><img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=960" srcset="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&amp;fit=crop&amp;q=75&amp;w=480&amp;h=384 480w, https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&amp;fit=crop&amp;q=75&amp;w=800&amp;h=640 800w, https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=960 1200w, https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&amp;fit=crop&amp;q=75&amp;w=1600&amp;h=1280 1600w" sizes="(max-width: 1020px) 100vw, 45vw" width="1200" height="960" alt="Small team working together on laptops at a shared desk" loading="lazy" decoding="async"></figure>
           </div>
           <div class="principles" data-reveal style="--d:.12s">
             <div class="principle"><h3>Performance first</h3><p>Pages and apps that load quickly and run smoothly, including on older phones and slower connections.</p></div>
@@ -214,7 +267,7 @@
     </section>
 
     <!-- FAQ -->
-    <section class="section" id="faq" data-shape="3" data-x="0.27" data-dim="0.26" aria-labelledby="faq-title">
+    <section class="section" id="faq" data-shape="3" data-x="0.27" data-dim="0.14" aria-labelledby="faq-title">
       <div class="wrap">
         <div class="section-head" data-reveal>
           <p class="eyebrow">Questions</p>
@@ -232,13 +285,14 @@
     </section>
 
     <!-- CONTACT -->
-    <section class="cta" id="contact" data-shape="1" data-x="-0.25" data-dim="0.3" aria-labelledby="contact-title">
+    <section class="cta" id="contact" data-shape="1" data-x="-0.25" data-dim="0.14" aria-labelledby="contact-title">
       <div class="wrap cta__grid">
         <div data-reveal>
           <p class="eyebrow">Start a project</p>
           <h2 id="contact-title">Have something in mind? Let&rsquo;s build it.</h2>
           <p class="lead">Tell us what you are building and where you are stuck. We will get back to you with clear next steps.</p>
           <dl class="cta__details">
+            <div><dt>Phone / WhatsApp</dt><dd><a href="tel:{{phoneHref}}">{{phone}}</a></dd></div>
             <div><dt>Email</dt><dd><a href="mailto:{{email}}">{{email}}</a></dd></div>
           </dl>
         </div>

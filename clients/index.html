@@ -37,18 +37,42 @@
       </div>
     </section>
 
-    <section class="section" style="padding-top:16px;padding-bottom:60px" data-shape="1" data-x="0.2" data-dim="0.3" aria-label="Our clients">
+    <section class="section" style="padding-top:16px;padding-bottom:60px" data-shape="1" data-x="0.2" data-dim="0.14" aria-label="Our clients">
       <div class="wrap">
-        <!--#include client-logos-->
+        <ul class="logo-grid" aria-label="Businesses we have worked with">
+          <li class="logo-tile" data-reveal style="--d:0.00s"><img src="/logos/hotel-chenthur-park.png" alt="Hotel Chenthur Park" loading="lazy" decoding="async"></li>
+          <li class="logo-tile" data-reveal style="--d:0.05s"><img src="/logos/core-construction.png" alt="Core Construction Company" loading="lazy" decoding="async"></li>
+          <li class="logo-tile" data-reveal style="--d:0.10s"><img src="/logos/helix-cnc-machine.png" alt="Helix CNC Machine" loading="lazy" decoding="async"></li>
+          <li class="logo-tile" data-reveal style="--d:0.15s"><img src="/logos/lemon-tree-hotels.png" alt="Lemon Tree Hotels" loading="lazy" decoding="async"></li>
+          <li class="logo-tile" data-reveal style="--d:0.00s"><img src="/logos/marks-autos.png" alt="Marks Autos" loading="lazy" decoding="async"></li>
+          <li class="logo-tile" data-reveal style="--d:0.05s"><img src="/logos/merlis-coimbatore.png" alt="Merlis Coimbatore" loading="lazy" decoding="async"></li>
+          <li class="logo-tile" data-reveal style="--d:0.10s"><img src="/logos/noah-infrastructures.png" alt="Noah Infrastructures" loading="lazy" decoding="async"></li>
+          <li class="logo-tile" data-reveal style="--d:0.15s"><img src="/logos/santhosh-constructions.png" alt="Santhosh Constructions" loading="lazy" decoding="async"></li>
+          <li class="logo-tile" data-reveal style="--d:0.00s"><img src="/logos/sets-machinery.png" alt="Sets Machinery" loading="lazy" decoding="async"></li>
+          <li class="logo-tile" data-reveal style="--d:0.05s"><img src="/logos/thalir-automations.png" alt="Thalir Automations" loading="lazy" decoding="async"></li>
+          <li class="logo-tile" data-reveal style="--d:0.10s"><img src="/logos/kp-construction.png" alt="KP Construction" loading="lazy" decoding="async"></li>
+          <li class="logo-tile" data-reveal style="--d:0.15s"><img src="/logos/thangam-hotel.png" alt="Thangam Hotel" loading="lazy" decoding="async"></li>
+        </ul>
       </div>
     </section>
 
-    <section class="section" data-shape="0" data-x="-0.22" data-dim="0.3" aria-labelledby="fit-title">
+    <section class="section section--tight" data-shape="3" data-x="0.2" data-dim="0.14" aria-labelledby="industries-title">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Industries</p>
+          <h2 id="industries-title">Sectors we have delivered for.</h2>
+        </div>
+        <!--#include industries-->
+      </div>
+    </section>
+
+    <section class="section" data-shape="0" data-x="-0.22" data-dim="0.14" aria-labelledby="fit-title">
       <div class="wrap split">
         <div data-reveal>
           <p class="eyebrow">Who we work best with</p>
           <h2 id="fit-title">Founders who want it done properly.</h2>
           <p class="lead" style="margin-top:24px">We take on a small number of projects at a time, so every client gets direct access to the person actually building their software &mdash; not a rotating account team.</p>
+          <figure class="photo photo--side"><img src="https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=900" srcset="https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?auto=format&amp;fit=crop&amp;q=75&amp;w=480&amp;h=360 480w, https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?auto=format&amp;fit=crop&amp;q=75&amp;w=800&amp;h=600 800w, https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?auto=format&amp;fit=crop&amp;q=75&amp;w=1200&amp;h=900 1200w, https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?auto=format&amp;fit=crop&amp;q=75&amp;w=1600&amp;h=1200 1600w" sizes="(max-width: 1020px) 100vw, 44vw" width="1200" height="900" alt="Business partners shaking hands across a table" loading="lazy" decoding="async"></figure>
         </div>
         <div class="principles" data-reveal style="--d:.12s">
           <div class="principle"><h3>Startups &amp; new businesses</h3><p>Launching a first website, app or system and want it built right from day one.</p></div>
@@ -59,13 +83,14 @@
       </div>
     </section>
 
-    <section class="cta" id="contact" data-shape="1" data-x="-0.25" data-dim="0.3" aria-labelledby="contact-title">
+    <section class="cta" id="contact" data-shape="1" data-x="-0.25" data-dim="0.14" aria-labelledby="contact-title">
       <div class="wrap cta__grid">
         <div data-reveal>
           <p class="eyebrow">Become a client</p>
           <h2 id="contact-title">Tell us about your business.</h2>
           <p class="lead">Share what you are building and where you are stuck. We will get back to you with clear next steps.</p>
           <dl class="cta__details">
+            <div><dt>Phone / WhatsApp</dt><dd><a href="tel:{{phoneHref}}">{{phone}}</a></dd></div>
             <div><dt>Email</dt><dd><a href="mailto:{{email}}">{{email}}</a></dd></div>
           </dl>
         </div>

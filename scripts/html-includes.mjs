@@ -13,6 +13,7 @@ export const pages = {
   mobileApps: 'services/mobile-app-development/index.html',
   businessSoftware: 'services/business-software/index.html',
   customApplications: 'services/custom-applications/index.html',
+  threeDWebsites: 'services/3d-website-development/index.html',
   servicesOverview: 'services/index.html',
   process: 'process/index.html',
   experience: 'experience/index.html',
@@ -34,6 +35,8 @@ const vars = {
   email: SITE.email,
   tagline: SITE.tagline,
   whatsapp: SITE.whatsapp,
+  phone: SITE.phone,
+  phoneHref: SITE.phone.replace(/[^+\d]/g, ''),
 };
 
 export function processHtml(html) {

@@ -50,7 +50,7 @@ for (const file of Object.values(pages)) {
 const missing = [];
 for (const file of Object.values(pages)) {
   const html = fs.readFileSync(path.join(out, file), 'utf8');
-  for (const [, url] of html.matchAll(/\b(?:href|src)="(?!https?:|mailto:|#|data:)([^"#]+)/g)) {
+  for (const [, url] of html.matchAll(/\b(?:href|src)="(?!https?:|mailto:|tel:|#|data:)([^"#]+)/g)) {
     if (!fs.existsSync(path.join(out, path.dirname(file), url))) missing.push(`${file} -> ${url}`);
   }
 }
