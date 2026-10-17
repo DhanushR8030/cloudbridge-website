@@ -4,7 +4,7 @@ export const SITE = {
   url: 'https://cloudbridge-technologies.com',
   tagline: 'Building Digital Foundations',
   email: 'technologiescloudbridge@gmail.com',
-  phone: '+91 97906 86377',
+  phone: '+91 96775 63876',
   // WhatsApp number in international format, digits only, no + or spaces
   // (e.g. '919876543210' for +91 98765 43210). Leave empty to hide the
   // floating WhatsApp button.

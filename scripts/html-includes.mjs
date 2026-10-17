@@ -37,6 +37,7 @@ const vars = {
   whatsapp: SITE.whatsapp,
   phone: SITE.phone,
   phoneHref: SITE.phone.replace(/[^+\d]/g, ''),
+  whatsappDisplay: SITE.whatsapp.replace(/^91(\d{5})(\d{5})$/, '+91 $1 $2'),
 };
 
 export function processHtml(html) {
