@@ -9,9 +9,9 @@ const FOV = 38;
 const CAM_Z = 9;
 
 const TIERS = {
-  low: { count: 9000, dpr: 1, size: 3.0, mouse: false },
-  mid: { count: 20000, dpr: 1.5, size: 2.4, mouse: true },
-  high: { count: 46000, dpr: 2, size: 2.1, mouse: true },
+  low: { count: 16000, dpr: 1, size: 3.3, mouse: false },
+  mid: { count: 40000, dpr: 1.5, size: 2.9, mouse: true },
+  high: { count: 90000, dpr: 2, size: 2.7, mouse: true },
 };
 
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -219,7 +219,7 @@ void main() {
   vec3 c2 = mix(vec3(0.13, 0.64, 0.28), vec3(0.14, 0.17, 0.19), smoothstep(0.5, 0.72, aRand.y));
   vColor = mix(aColor, c2, 1.0 - uW.x);
   float twinkle = mix(1.0, 0.7 + 0.3 * sin(uTime * 1.3 + ph * 9.0), aDust);
-  vA = uOpacity * clamp(1.2 - (depth - 5.0) / 11.0, 0.25, 1.0) * mix(0.92, 0.42, aDust) * (0.65 + 0.35 * aRand.x) * twinkle;
+  vA = uOpacity * clamp(1.2 - (depth - 5.0) / 11.0, 0.25, 1.0) * mix(1.0, 0.5, aDust) * (0.72 + 0.28 * aRand.x) * twinkle;
 }`;
 
 const FRAG = /* glsl */`
