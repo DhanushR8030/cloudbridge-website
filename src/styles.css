@@ -652,3 +652,19 @@ a.live3d:hover { border-color: rgba(34, 164, 71, .5); color: var(--green-ink); }
   .showcase3d__facts { grid-template-columns: 1fr 1fr; }
 }
 @media (prefers-reduced-motion: reduce) { .live3d i { animation: none; } }
+
+/* ------------------------------------------------------------- about / seo content */
+.hero__kicker { margin: 0 0 18px; font: 600 .78rem var(--f-head); letter-spacing: .16em; text-transform: uppercase; color: var(--green-ink); text-align: center; opacity: 0; animation: fade 1s .2s ease forwards; }
+.subhead { font-size: 1.05rem; margin: 30px 0 8px; }
+.facts { padding: clamp(24px, 3vw, 36px); border-radius: 24px; background: rgba(255, 255, 255, .95); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.facts h3 { margin-bottom: 18px; }
+.facts dl { margin: 0; display: grid; gap: 0; }
+.facts dl div { display: grid; grid-template-columns: 120px 1fr; gap: 14px; padding: 13px 0; border-top: 1px solid var(--line); }
+.facts dt { font: 700 .7rem var(--f-head); letter-spacing: .16em; text-transform: uppercase; color: var(--mute); padding-top: 3px; }
+.facts dd { margin: 0; color: var(--ink); font-weight: 500; min-width: 0; overflow-wrap: anywhere; }
+.facts dd a:hover { color: var(--green-ink); }
+.related--5 { grid-template-columns: repeat(5, 1fr); }
+@media (max-width: 1100px) { .related--5 { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 1020px) { .related--5 { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .facts dl div { grid-template-columns: 1fr; gap: 2px; } }
+@media (prefers-reduced-motion: reduce) { .hero__kicker { animation: none; opacity: 1; } }

@@ -1,0 +1,29 @@
+# CloudBridge Technologies
+
+> CloudBridge Technologies is a software development company in Coimbatore, Tamil Nadu, India, founded by Dhanush. It builds websites, 3D websites, Android and iOS mobile apps, custom business software and desktop applications for businesses in Coimbatore, across India and worldwide.
+
+## Key facts
+- Company: CloudBridge Technologies
+- Founder: Dhanush
+- Location: Coimbatore, Tamil Nadu, India
+- Experience: 3+ years, 100+ projects delivered
+- Industries served: hospitality, construction, manufacturing, automotive, real estate and infrastructure, automation
+- Phone: +91 96775 63876
+- WhatsApp: +91 97906 86377
+- Email: technologiescloudbridge@gmail.com
+- Website: https://cloudbridge-technologies.com/
+- How they work: fixed written estimates, clients own the source code, post-launch support, reply within one business day, clients work directly with the founder
+
+## Services
+- [Website Development](https://cloudbridge-technologies.com/services/website-development/): business websites, landing pages, e-commerce stores and web portals, SEO-ready and mobile-first
+- [3D Website Development](https://cloudbridge-technologies.com/services/3d-website-development/): interactive WebGL / Three.js websites with live 3D, scroll animation and mouse interaction, tuned for phones
+- [Mobile App Development](https://cloudbridge-technologies.com/services/mobile-app-development/): native and cross-platform Android and iOS apps, including Play Store and App Store publishing
+- [Business Software](https://cloudbridge-technologies.com/services/business-software/): CRM, inventory, billing, dashboards and customer portals
+- [Custom & Desktop Applications](https://cloudbridge-technologies.com/services/custom-applications/): Windows and macOS desktop software (C#, .NET, SQL Server), automation tools and secure access systems
+
+## Pages
+- [About](https://cloudbridge-technologies.com/about/)
+- [Clients](https://cloudbridge-technologies.com/clients/)
+- [Process](https://cloudbridge-technologies.com/process/)
+- [Experience](https://cloudbridge-technologies.com/experience/)
+- [Contact](https://cloudbridge-technologies.com/contact/)

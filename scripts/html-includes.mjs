@@ -17,6 +17,7 @@ export const pages = {
   servicesOverview: 'services/index.html',
   process: 'process/index.html',
   experience: 'experience/index.html',
+  about: 'about/index.html',
   clients: 'clients/index.html',
   contact: 'contact/index.html',
   privacy: 'privacy-policy/index.html',

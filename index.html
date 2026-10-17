@@ -34,7 +34,7 @@
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "Organization",
+        "@type": ["Organization", "ProfessionalService"],
         "@id": "{{siteUrl}}/#organization",
         "name": "CloudBridge Technologies",
         "url": "{{siteUrl}}/",
@@ -44,7 +44,29 @@
         "telephone": "{{phone}}",
         "address": { "@type": "PostalAddress", "addressLocality": "Coimbatore", "addressRegion": "Tamil Nadu", "addressCountry": "IN" },
         "description": "CloudBridge Technologies is a software development company based in Coimbatore, Tamil Nadu, building websites, Android and iOS apps, desktop software and custom business systems for businesses worldwide.",
-        "areaServed": "Worldwide"
+        "image": "{{siteUrl}}/og-image.png",
+        "founder": { "@type": "Person", "@id": "{{siteUrl}}/about/#dhanush", "name": "Dhanush", "jobTitle": "Founder", "worksFor": { "@id": "{{siteUrl}}/#organization" } },
+        "areaServed": [
+          { "@type": "City", "name": "Coimbatore" },
+          { "@type": "State", "name": "Tamil Nadu" },
+          { "@type": "Country", "name": "India" },
+          "Worldwide"
+        ],
+        "knowsAbout": ["Website development", "3D website development", "WebGL", "Android app development", "iOS app development", "Custom business software", "CRM software", "Inventory management software", "Desktop application development", "C# .NET", "SEO-ready web design"],
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Software development services",
+          "itemListElement": [
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Website Development", "url": "{{siteUrl}}/services/website-development/" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "3D Website Development", "url": "{{siteUrl}}/services/3d-website-development/" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Mobile App Development", "url": "{{siteUrl}}/services/mobile-app-development/" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Business Software", "url": "{{siteUrl}}/services/business-software/" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Custom & Desktop Applications", "url": "{{siteUrl}}/services/custom-applications/" } }
+          ]
+        },
+        "contactPoint": [
+          { "@type": "ContactPoint", "contactType": "sales", "telephone": "{{phone}}", "email": "{{email}}", "areaServed": "IN", "availableLanguage": ["English"] }
+        ]
       },
       {
         "@type": "WebSite",
@@ -96,6 +118,7 @@
       </div>
       <div class="wrap">
         <div class="hero__center">
+          <p class="hero__kicker">Website, app &amp; software development company in Coimbatore</p>
           <h1 id="hero-title">
             <span class="line"><span>From blueprint to build&mdash;</span></span>
             <span class="line"><span>software that <em class="grad">holds</em>.</span></span>
