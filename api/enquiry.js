@@ -1,11 +1,10 @@
 // Public endpoint: the website contact form posts here. Saves the enquiry
 // so it appears in the admin app. Write-only - nothing can be read back.
 import crypto from 'node:crypto';
-import { update, storeConfigured } from './_lib/store.js';
+import { storeConfigured } from './_lib/store.js';
+import { addEnquiry } from './_lib/enquiries-db.js';
 import { json, readBody, clientIp, sameOrigin } from './_lib/http.js';
 
-export const ENQUIRIES = 'data/enquiries.json';
-const MAX_KEEP = 5000;
 const recent = new Map(); // per-instance soft throttle: ip -> [timestamps]
 
 const clean = (v, max) => String(v ?? '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim().slice(0, max);
@@ -43,10 +42,7 @@ export async function POST(request) {
   const record = { id: `${now}-${crypto.randomBytes(4).toString('hex')}`, ...e, createdAt: iso, updatedAt: iso, status: 'new', notes: '' };
 
   try {
-    await update(ENQUIRIES, { items: [] }, (d) => {
-      d.items.unshift(record);
-      if (d.items.length > MAX_KEEP) d.items.length = MAX_KEEP;
-    });
+    await addEnquiry(record);
   } catch (err) {
     console.error('enquiry save failed', err);
     return json({ ok: false, error: 'save_failed' }, 500);

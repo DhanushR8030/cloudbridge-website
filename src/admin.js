@@ -8,7 +8,10 @@ const appView = $('#app');
 const listEl = $('#list');
 const tpl = $('#card-tpl');
 
-let items = [];
+let items = [];               // every loaded enquiry, newest first
+const months = new Map();    // "2026-10" -> { etag, items }
+const PAGE = 40;             // cards drawn at a time - keeps scrolling smooth with thousands
+let limit = PAGE;
 let filter = 'all';
 let query = '';
 let knownIds = null;
@@ -80,46 +83,85 @@ function showApp() {
 }
 
 /* ---------- data ---------- */
-async function load(quiet) {
-  const { status, data } = await api('/api/admin/enquiries').catch(() => ({ status: 0, data: {} }));
-  if (status === 401) return showLogin('Your session has ended. Please sign in again.');
+const IST_MS = 5.5 * 3600 * 1000;
+const currentMonth = () => new Date(Date.now() + IST_MS).toISOString().slice(0, 7);
+
+async function fetchMonth(m) {
+  const have = months.get(m)?.etag || '';
+  const r = await api(`/api/admin/enquiries?month=${m}&have=${encodeURIComponent(have)}`);
+  if (r.status !== 200) throw Object.assign(new Error('load'), { status: r.status });
+  if (!r.data.unchanged) months.set(m, { etag: r.data.etag, items: r.data.items || [] });
+}
+
+async function pool(list, n, fn) {
+  let i = 0;
+  await Promise.all(Array.from({ length: Math.min(n, list.length) }, async () => { while (i < list.length) await fn(list[i++]); }));
+}
+
+function rebuild() {
+  items = [...months.keys()].sort().reverse().flatMap((m) => months.get(m).items);
+}
+
+// full = check every month (app start / Refresh button); otherwise only the
+// current month, which is the only one that gets new enquiries.
+async function load(quiet, full = !quiet) {
   const banner = $('#banner');
-  if (status === 503) {
-    banner.hidden = false;
-    banner.textContent = 'Enquiry storage is not connected. Connect the Blob store to this project in Vercel, then redeploy.';
-    items = [];
-    return render();
-  }
-  if (status !== 200) {
+  try {
+    if (full || !months.size) {
+      const r = await api('/api/admin/enquiries');
+      if (r.status !== 200) throw Object.assign(new Error('list'), { status: r.status });
+      await pool(r.data.months || [], 4, fetchMonth);
+    } else {
+      await fetchMonth(currentMonth());
+    }
+  } catch (err) {
+    if (err.status === 401) return showLogin('Your session has ended. Please sign in again.');
+    if (err.status === 503) {
+      banner.hidden = false;
+      banner.textContent = 'Enquiry storage is not connected. Connect the Blob store to this project in Vercel, then redeploy.';
+      return;
+    }
     if (!quiet) { banner.hidden = false; banner.textContent = 'Could not load enquiries. Check your internet connection and press Refresh.'; }
     return;
   }
   banner.hidden = true;
-  const fresh = data.items || [];
+  rebuild();
   if (knownIds) {
-    const added = fresh.filter((i) => !knownIds.has(i.id));
+    const added = items.filter((i) => !knownIds.has(i.id));
     if (added.length) toast(added.length === 1 ? `New enquiry from ${added[0].name}` : `${added.length} new enquiries`);
   }
-  knownIds = new Set(fresh.map((i) => i.id));
-  items = fresh;
+  knownIds = new Set(items.map((i) => i.id));
   $('#updated').textContent = `Updated ${new Date().toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' })} · refreshes automatically`;
   render();
 }
 
 function counts() {
   const c = { all: items.length, new: 0, contacted: 0, converted: 0, closed: 0 };
-  items.forEach((i) => { c[i.status] = (c[i.status] || 0) + 1; });
-  Object.entries(c).forEach(([k, v]) => { const el = $(`#c-${k}`); if (el) el.textContent = v; });
+  for (const i of items) c[i.status] = (c[i.status] || 0) + 1;
+  Object.entries(c).forEach(([k, v]) => { const el = $(`#c-${k}`); if (el) el.textContent = v.toLocaleString('en-IN'); });
   document.title = c.new ? `(${c.new}) CloudBridge Admin` : 'CloudBridge Admin';
   if ('setAppBadge' in navigator) { (c.new ? navigator.setAppBadge(c.new) : navigator.clearAppBadge()).catch(() => {}); }
 }
 
+const haystack = new WeakMap();
+const textOf = (i) => {
+  let t = haystack.get(i);
+  if (t === undefined || t.n !== i.notes || t.s !== i.status) {
+    t = { v: [i.name, i.email, i.phone, i.service, i.message, i.notes].join(' ').toLowerCase(), n: i.notes, s: i.status };
+    haystack.set(i, t);
+  }
+  return t.v;
+};
+
 function render() {
   counts();
   const q = query.toLowerCase();
-  const shown = items.filter((i) => (filter === 'all' || i.status === filter)
-    && (!q || [i.name, i.email, i.phone, i.service, i.message, i.notes].join(' ').toLowerCase().includes(q)));
-  listEl.replaceChildren(...shown.map(card));
+  const shown = items.filter((i) => (filter === 'all' || i.status === filter) && (!q || textOf(i).includes(q)));
+  listEl.replaceChildren(...shown.slice(0, limit).map(card));
+  const more = $('#more');
+  const left = shown.length - Math.min(limit, shown.length);
+  more.hidden = left <= 0;
+  more.textContent = `Show more (${left.toLocaleString('en-IN')} more)`;
   $('#empty').hidden = shown.length > 0;
   if (!shown.length && items.length) {
     $('#empty').querySelector('h2').textContent = 'Nothing matches';
@@ -179,7 +221,10 @@ function card(item) {
   el.querySelector('.del').addEventListener('click', async () => {
     if (!confirm(`Delete the enquiry from ${item.name}? This cannot be undone.`)) return;
     const r = await api(`/api/admin/enquiries?id=${encodeURIComponent(item.id)}`, { method: 'DELETE' });
-    if (r.status === 200) { items = items.filter((i) => i.id !== item.id); knownIds?.delete(item.id); toast('Enquiry deleted'); render(); }
+    if (r.status === 200) {
+      for (const m of months.values()) m.items = m.items.filter((i) => i.id !== item.id);
+      rebuild(); knownIds?.delete(item.id); toast('Enquiry deleted'); render();
+    }
     else toast('Could not delete - try again');
   });
 
@@ -241,7 +286,7 @@ $('#login-form').addEventListener('submit', async (e) => {
 
 $('#logout-btn').addEventListener('click', async () => {
   await api('/api/admin/logout', { method: 'POST' }).catch(() => {});
-  items = []; knownIds = null;
+  items = []; months.clear(); knownIds = null;
   if ('clearAppBadge' in navigator) navigator.clearAppBadge().catch(() => {});
   showLogin('You have been logged out.');
 });
@@ -258,17 +303,31 @@ $('#pw-form').addEventListener('submit', async (e) => {
   if (r.status === 200) { dlg.close(); toast('Password changed'); return; }
   $('#pw-msg').textContent = { 401: 'Current password is wrong.', 400: 'Please use at least 10 characters.' }[r.status] || 'Could not change password. Try again.';
 });
-$('#refresh-btn').addEventListener('click', () => { load(); toast('Refreshed'); });
+$('#refresh-btn').addEventListener('click', async () => { await load(false, true); toast('Refreshed'); });
 $('#export-btn').addEventListener('click', exportCsv);
-$('#search').addEventListener('input', (e) => { query = e.target.value.trim(); render(); });
+let searchT;
+$('#search').addEventListener('input', (e) => {
+  clearTimeout(searchT);
+  searchT = setTimeout(() => { query = e.target.value.trim(); limit = PAGE; render(); }, 150);
+});
+$('#more').addEventListener('click', () => { limit += PAGE; render(); });
+if ('IntersectionObserver' in window) {
+  new IntersectionObserver((es) => { if (es[0].isIntersecting && !$('#more').hidden) { limit += PAGE; render(); } }, { rootMargin: '400px' }).observe($('#more'));
+}
 $('#tabs').addEventListener('click', (e) => {
   const b = e.target.closest('button[data-f]');
   if (!b) return;
   filter = b.dataset.f;
+  limit = PAGE;
   document.querySelectorAll('#tabs button').forEach((x) => x.classList.toggle('is-on', x === b));
   render();
 });
-document.addEventListener('visibilitychange', () => { if (!document.hidden && !appView.hidden) load(true); });
+let lastFocusLoad = 0;
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden || appView.hidden || Date.now() - lastFocusLoad < 60000) return;
+  lastFocusLoad = Date.now();
+  load(true);
+});
 
 /* ---------- install as an app ---------- */
 let deferred;

@@ -3,8 +3,8 @@
 // is connected to the project). CB_LOCAL_STORE=<dir> switches to plain files
 // for local testing.
 //
-// All enquiries live in ONE small JSON file, so the admin app needs a single
-// read per refresh - this keeps usage far inside Vercel's free Blob limits.
+// Enquiries are stored one file per month (see enquiries-db.js). Old months
+// never need re-downloading, and refreshes only check the current month.
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -19,17 +19,25 @@ export function storeConfigured() {
   return Boolean(LOCAL || process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
 }
 
-/** Read a JSON file. Returns { data, etag } or null when it does not exist. */
-export async function read(pathname) {
+/**
+ * Read a JSON file. Returns { data, etag }, or null when it does not exist.
+ * With ifNoneMatch, returns { notModified: true, etag } when unchanged, so
+ * nothing is downloaded.
+ */
+export async function read(pathname, { ifNoneMatch } = {}) {
   if (LOCAL) {
     try {
       const text = await fs.readFile(path.join(LOCAL, pathname), 'utf8');
-      return { data: JSON.parse(text), etag: localEtag(text) };
+      const etag = localEtag(text);
+      if (ifNoneMatch && ifNoneMatch === etag) return { notModified: true, etag };
+      return { data: JSON.parse(text), etag };
     } catch { return null; }
   }
   const { get } = await blob();
-  const res = await get(pathname, { access: ACCESS, useCache: false });
-  if (!res || res.statusCode !== 200) return null;
+  const res = await get(pathname, { access: ACCESS, useCache: false, ...(ifNoneMatch ? { ifNoneMatch } : {}) });
+  if (!res) return null;
+  if (res.statusCode === 304) return { notModified: true, etag: res.blob.etag };
+  if (res.statusCode !== 200) return null;
   const text = await new Response(res.stream).text();
   return { data: JSON.parse(text), etag: res.blob.etag };
 }

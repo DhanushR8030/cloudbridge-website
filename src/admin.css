@@ -156,3 +156,4 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .dlg__btns { display: flex; justify-content: flex-end; gap: 8px; }
 .show-sm { display: none; }
 @media (max-width: 640px) { .show-sm { display: inline; } }
+.more { display: flex; margin: 18px auto 0; min-width: 220px; }
