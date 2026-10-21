@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>CloudBridge Admin</title>
+  <meta name="theme-color" content="#0a100d">
+  <link rel="manifest" href="/admin/manifest.webmanifest">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/admin/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="CB Admin">
+  <script type="module" src="/src/admin.js"></script>
+</head>
+<body>
+  <!-- Login -->
+  <main class="login" id="login" hidden>
+    <form class="login__card" id="login-form" autocomplete="on">
+      <div class="brand"><span class="brand__mark" aria-hidden="true"></span><span>CloudBridge <b>Admin</b></span></div>
+      <h1 id="login-title">Sign in</h1>
+      <p class="muted" id="login-sub">Enter your admin password to see website enquiries.</p>
+      <input type="text" name="username" value="admin" autocomplete="username" hidden>
+      <label class="fld">
+        <span id="password-label">Password</span>
+        <input type="password" name="password" id="password" autocomplete="current-password" required>
+      </label>
+      <label class="fld" id="confirm-wrap" hidden>
+        <span>Type it again</span>
+        <input type="password" id="password2" autocomplete="new-password">
+      </label>
+      <button class="btn btn--primary" type="submit" id="login-btn">Sign in</button>
+      <p class="msg" id="login-msg" role="alert"></p>
+    </form>
+  </main>
+
+  <!-- App -->
+  <div class="app" id="app" hidden>
+    <header class="top">
+      <div class="brand"><span class="brand__mark" aria-hidden="true"></span><span>CloudBridge <b>Admin</b></span></div>
+      <div class="top__actions">
+        <button class="btn btn--ghost" id="install-btn" hidden title="Install as an app">Install app</button>
+        <button class="btn btn--ghost" id="refresh-btn" title="Refresh"><span class="ico ico--refresh" aria-hidden="true"></span><span class="hide-sm">Refresh</span></button>
+        <button class="btn btn--ghost" id="export-btn" title="Download all enquiries as a CSV file for Excel"><span class="ico ico--down" aria-hidden="true"></span><span class="hide-sm">Export</span></button>
+        <button class="btn btn--ghost" id="pw-btn" title="Change password"><span class="hide-sm">Password</span><span class="show-sm" aria-hidden="true">Key</span></button>
+        <button class="btn btn--ghost" id="logout-btn">Log out</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="head">
+        <div>
+          <h1>Enquiries</h1>
+          <p class="muted" id="updated">Loading…</p>
+        </div>
+        <label class="search">
+          <span class="ico ico--search" aria-hidden="true"></span>
+          <input type="search" id="search" placeholder="Search name, phone, email, message…" aria-label="Search enquiries">
+        </label>
+      </div>
+
+      <nav class="tabs" id="tabs" aria-label="Filter by status">
+        <button data-f="all" class="is-on">All <i id="c-all">0</i></button>
+        <button data-f="new">New <i id="c-new">0</i></button>
+        <button data-f="contacted">Contacted <i id="c-contacted">0</i></button>
+        <button data-f="converted">Converted <i id="c-converted">0</i></button>
+        <button data-f="closed">Closed <i id="c-closed">0</i></button>
+      </nav>
+
+      <p class="banner" id="banner" hidden></p>
+      <section class="list" id="list" aria-live="polite"></section>
+      <div class="empty" id="empty" hidden>
+        <span class="empty__ico" aria-hidden="true"></span>
+        <h2>No enquiries here yet</h2>
+        <p class="muted">New enquiries from the website contact form will appear here automatically.</p>
+      </div>
+    </main>
+  </div>
+
+  <template id="card-tpl">
+    <article class="card">
+      <header class="card__head">
+        <div class="card__who">
+          <h2 class="card__name"></h2>
+          <p class="card__meta"><span class="card__service"></span><span class="dot">·</span><time class="card__date"></time></p>
+        </div>
+        <span class="pill"></span>
+      </header>
+      <p class="card__msg"></p>
+      <div class="card__contact">
+        <a class="chip chip--call" target="_self"><span class="ico ico--phone" aria-hidden="true"></span><span class="t"></span></a>
+        <a class="chip chip--wa" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="chip chip--mail"><span class="ico ico--mail" aria-hidden="true"></span><span class="t"></span></a>
+      </div>
+      <div class="card__manage">
+        <label class="fld fld--inline">
+          <span>Status</span>
+          <select class="status">
+            <option value="new">New</option>
+            <option value="contacted">Contacted</option>
+            <option value="converted">Converted</option>
+            <option value="closed">Closed</option>
+          </select>
+        </label>
+        <label class="fld fld--grow">
+          <span>Private notes</span>
+          <textarea class="notes" rows="2" placeholder="e.g. Called on Monday, sending quote by Friday"></textarea>
+        </label>
+        <div class="card__btns">
+          <button class="btn btn--small btn--primary save" disabled>Save notes</button>
+          <button class="btn btn--small btn--danger del">Delete</button>
+        </div>
+      </div>
+      <p class="card__foot"></p>
+    </article>
+  </template>
+
+  <dialog class="dlg" id="pw-dlg">
+    <form id="pw-form" method="dialog">
+      <h2>Change password</h2>
+      <p class="muted">This signs out every other device.</p>
+      <input type="text" name="username" value="admin" autocomplete="username" hidden>
+      <label class="fld"><span>Current password</span><input type="password" id="pw-cur" autocomplete="current-password" required></label>
+      <label class="fld"><span>New password (10+ characters)</span><input type="password" id="pw-new" autocomplete="new-password" minlength="10" required></label>
+      <p class="msg" id="pw-msg" role="alert"></p>
+      <div class="dlg__btns">
+        <button class="btn btn--ghost" type="button" id="pw-cancel">Cancel</button>
+        <button class="btn btn--primary" type="submit" id="pw-save">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

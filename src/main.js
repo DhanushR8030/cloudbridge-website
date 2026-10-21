@@ -170,17 +170,25 @@ document.querySelectorAll('form[data-cb-form]').forEach((form) => {
       say('Your email app should open with the message ready to send.');
     };
 
-    if (!SITE.formEndpoint) { mailFallback(); track('generate_lead', { method: 'mailto' }); btn.disabled = false; return; }
-    try {
+    // Send to the admin app and the email alert at the same time;
+    // the enquiry counts as sent if either one gets through.
+    const post = async (url, payload) => {
       const ctrl = new AbortController();
       const timeout = setTimeout(() => ctrl.abort(), 12000);
-      let res;
       try {
-        res = await fetch(SITE.formEndpoint, {
-          method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data), signal: ctrl.signal,
+        const res = await fetch(url, {
+          method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload), signal: ctrl.signal,
         });
+        if (!res.ok) throw new Error(String(res.status));
+        return true;
       } finally { clearTimeout(timeout); }
-      if (!res.ok) throw new Error(String(res.status));
+    };
+    const { _subject, _template, _captcha, ...enquiry } = data;
+    const sends = [post('/api/enquiry', enquiry)];
+    if (SITE.formEndpoint) sends.push(post(SITE.formEndpoint, data));
+    try {
+      const results = await Promise.allSettled(sends);
+      if (!results.some((r) => r.status === 'fulfilled')) throw new Error('all failed');
       form.reset();
       say('Thank you - your message has been sent. We will reply shortly.');
       track('generate_lead', { method: 'form' });

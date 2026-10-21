@@ -22,6 +22,7 @@ export const pages = {
   contact: 'contact/index.html',
   privacy: 'privacy-policy/index.html',
   notFound: '404.html',
+  admin: 'admin/index.html',
 };
 
 const vars = {

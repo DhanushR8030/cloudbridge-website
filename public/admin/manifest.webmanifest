@@ -1,0 +1,15 @@
+{
+  "id": "/admin/",
+  "name": "CloudBridge Admin",
+  "short_name": "CB Admin",
+  "description": "Website enquiries for CloudBridge Technologies.",
+  "start_url": "/admin/",
+  "scope": "/admin/",
+  "display": "standalone",
+  "background_color": "#0a100d",
+  "theme_color": "#0a100d",
+  "icons": [
+    { "src": "/admin/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/admin/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
