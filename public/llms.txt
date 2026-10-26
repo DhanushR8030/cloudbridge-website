@@ -6,7 +6,7 @@
 - Company: CloudBridge Technologies
 - Founder: Dhanush
 - Location: Coimbatore, Tamil Nadu, India
-- Experience: 3+ years, 100+ projects delivered
+- Projects: 100+ projects delivered
 - Industries served: hospitality, construction, manufacturing, automotive, real estate and infrastructure, automation
 - Phone: +91 96775 63876
 - WhatsApp: +91 97906 86377
@@ -25,5 +25,4 @@
 - [About](https://cloudbridge-technologies.com/about/)
 - [Clients](https://cloudbridge-technologies.com/clients/)
 - [Process](https://cloudbridge-technologies.com/process/)
-- [Experience](https://cloudbridge-technologies.com/experience/)
 - [Contact](https://cloudbridge-technologies.com/contact/)

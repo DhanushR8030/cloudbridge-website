@@ -16,7 +16,6 @@ export const pages = {
   threeDWebsites: 'services/3d-website-development/index.html',
   servicesOverview: 'services/index.html',
   process: 'process/index.html',
-  experience: 'experience/index.html',
   about: 'about/index.html',
   clients: 'clients/index.html',
   contact: 'contact/index.html',

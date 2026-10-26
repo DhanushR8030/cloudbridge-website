@@ -10,6 +10,16 @@
       ],
       "destination": "https://cloudbridge-technologies.com/:path*",
       "permanent": true
+    },
+    {
+      "source": "/experience",
+      "destination": "/clients/",
+      "permanent": true
+    },
+    {
+      "source": "/experience/:path*",
+      "destination": "/clients/",
+      "permanent": true
     }
   ],
   "headers": [
