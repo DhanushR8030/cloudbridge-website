@@ -4,7 +4,7 @@
   --bg-tint: #eaf3ed;
   --ink: #0a100d;
   --ink-2: #3f4b44;
-  --mute: #6d7a72;
+  --mute: #5f6b64;
   --line: rgba(10, 16, 13, 0.1);
   --line-strong: rgba(10, 16, 13, 0.2);
   --green: #22a447;
@@ -456,7 +456,7 @@ main, .site-footer { position: relative; z-index: 2; }
 .site-footer__brand p { max-width: 24em; margin: 22px 0 14px; color: #a9b6ae; font-size: .97rem; }
 .site-footer__mail { color: #fff; font-weight: 600; border-bottom: 1px solid var(--green-hi); padding-bottom: 2px; }
 .site-footer__col { display: grid; gap: 10px; align-content: start; }
-.site-footer__col h2 { font: 700 .7rem var(--f-head); letter-spacing: .22em; text-transform: uppercase; color: #6f7d75; margin-bottom: 8px; }
+.site-footer__col h2 { font: 700 .7rem var(--f-head); letter-spacing: .22em; text-transform: uppercase; color: #8f9b94; margin-bottom: 8px; }
 .site-footer__col a { color: #c9d4cd; font-size: .97rem; transition: color .2s; width: fit-content; }
 .site-footer__col a:hover { color: var(--green-hi); }
 .site-footer__bottom { margin-top: 70px; padding-top: 26px; border-top: 1px solid rgba(255, 255, 255, .12); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: .85rem; color: #7f8d85; }
@@ -623,7 +623,7 @@ main, .site-footer { position: relative; z-index: 2; }
 .logo-tile img { max-width: 100%; max-height: 72px; width: auto; height: auto; object-fit: contain; }
 .site-footer__contact { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 12px; }
 .site-footer__contact li { display: grid; gap: 2px; }
-.site-footer__contact span { font: 700 .66rem var(--f-head); letter-spacing: .18em; text-transform: uppercase; opacity: .6; }
+.site-footer__contact span { font: 700 .66rem var(--f-head); letter-spacing: .18em; text-transform: uppercase; color: #8f9b94; }
 .site-footer__contact a:hover { color: var(--green-hi); }
 @media (max-width: 860px) { .logo-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 640px) { .logo-grid { grid-template-columns: 1fr 1fr; } .logo-tile { height: 96px; } }
