@@ -1,11 +1,12 @@
 import {
   WebGLRenderer, Scene, PerspectiveCamera, BufferGeometry, BufferAttribute,
-  ShaderMaterial, Points, NormalBlending, Vector2, Vector4, LineSegments, LineBasicMaterial,
+  ShaderMaterial, Points, NormalBlending, Vector2, Vector3, Vector4, LineSegments, LineBasicMaterial,
 } from 'three';
 import { LOGO } from './logo-data.js';
 
 const BG = 0xffffff;
 const FOV = 38;
+const SHAPES = 8; // logo, globe, bridge, terrain, phone, laptop, gears, code
 const CAM_Z = 9;
 
 const TIERS = {
@@ -34,6 +35,26 @@ function cellsFromMask(b64) {
   return cells;
 }
 
+// A point on the outline of a rounded rectangle centred on 0,0.
+function onRoundRect(w, h, r, u) {
+  const sw = w - 2 * r, sh = h - 2 * r, arc = (Math.PI / 2) * r;
+  let d = u * (2 * sw + 2 * sh + 4 * arc);
+  const at = (cx, cy, a) => [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+  if (d < sw) return [-sw / 2 + d, h / 2]; d -= sw;
+  if (d < arc) return at(sw / 2, sh / 2, Math.PI / 2 - d / r); d -= arc;
+  if (d < sh) return [w / 2, sh / 2 - d]; d -= sh;
+  if (d < arc) return at(sw / 2, -sh / 2, -d / r); d -= arc;
+  if (d < sw) return [sw / 2 - d, -h / 2]; d -= sw;
+  if (d < arc) return at(-sw / 2, -sh / 2, -Math.PI / 2 - d / r); d -= arc;
+  if (d < sh) return [-w / 2, -sh / 2 + d]; d -= sh;
+  return at(-sw / 2, sh / 2, Math.PI - Math.min(d, arc) / r);
+}
+// An app icon: mostly its rounded outline, some fill.
+function iconPoint(rand, s) {
+  if (rand() < 0.62) return onRoundRect(s, s, s * 0.28, rand());
+  return [(rand() - 0.5) * s * 0.8, (rand() - 0.5) * s * 0.8];
+}
+
 const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
 
 function detectTier(gl) {
@@ -52,7 +73,7 @@ function detectTier(gl) {
 
 function buildShapes(N) {
   const rand = mulberry32(20260921);
-  const P = [0, 1, 2, 3].map(() => new Float32Array(N * 3));
+  const P = Array.from({ length: SHAPES }, () => new Float32Array(N * 3));
   const color = new Float32Array(N * 3);
   const rnd = new Float32Array(N * 4);
   const dust = new Float32Array(N);
@@ -75,7 +96,7 @@ function buildShapes(N) {
       dust[i] = 1;
       const r = 3.3 + Math.pow(rand(), 0.85) * 6.2, th = rand() * Math.PI * 2, ph = Math.acos(2 * rand() - 1);
       const x = r * Math.sin(ph) * Math.cos(th), y = r * Math.sin(ph) * Math.sin(th) * 0.72, z = r * Math.cos(ph) * 0.5 - 2;
-      for (let s = 0; s < 4; s++) put(s, i, x, y, z);
+      for (let s = 0; s < SHAPES; s++) put(s, i, x, y, z);
       const b = 0.5 + rand() * 0.25;
       color[i * 3] = b * 0.8; color[i * 3 + 1] = b * 0.95; color[i * 3 + 2] = b * 0.86;
       continue;
@@ -151,6 +172,97 @@ function buildShapes(N) {
       [y, z] = rotX(y, z, -0.5);
       put(3, i, x * 0.72, (y + 0.2) * 0.72, z * 0.72);
     }
+
+    // ---- 4: smartphone with app grid and floating notifications
+    {
+      const t = rand(), d = 0.2;
+      let x, y, z;
+      if (t < 0.24) { [x, y] = onRoundRect(1.8, 3.4, 0.3, rand()); z = (rand() < 0.5 ? -1 : 1) * d / 2; }
+      else if (t < 0.32) { [x, y] = onRoundRect(1.8, 3.4, 0.3, rand()); z = (rand() - 0.5) * d; }
+      else if (t < 0.66) {
+        const c = (rand() * 4) | 0, r = (rand() * 5) | 0;
+        [x, y] = iconPoint(rand, 0.3); x += -0.6 + c * 0.4; y += 1.05 - r * 0.44; z = d / 2 + 0.02;
+      } else if (t < 0.75) {
+        const c = (rand() * 4) | 0; [x, y] = iconPoint(rand, 0.3); x += -0.6 + c * 0.4; y += -1.2; z = d / 2 + 0.02;
+      } else if (t < 0.8) {
+        const top = rand() < 0.5; x = (rand() - 0.5) * (top ? 0.5 : 0.62); y = top ? 1.52 : -1.52; y += (rand() - 0.5) * 0.04; z = d / 2 + 0.02;
+      } else {
+        const right = rand() < 0.55, cw = 1.35, chh = 0.4;
+        const cx = right ? 1.05 : -1.0, cy = right ? 0.62 : -0.38, cz = right ? 0.55 : 0.75;
+        if (rand() < 0.55) [x, y] = onRoundRect(cw, chh, 0.1, rand());
+        else { const row = rand() < 0.5 ? 0.07 : -0.08; x = -cw / 2 + 0.36 + rand() * (row > 0 ? 0.75 : 0.5); y = row; }
+        if (rand() < 0.12) { const [ix, iy] = iconPoint(rand, 0.2); x = -cw / 2 + 0.17 + ix; y = iy; }
+        x += cx; y += cy; z = cz;
+      }
+      const ca = Math.cos(-0.32), sa = Math.sin(-0.32);
+      put(4, i, (x * ca + z * sa) * 0.92, y * 0.92, (-x * sa + z * ca) * 0.92);
+    }
+
+    // ---- 5: laptop with code on the screen
+    {
+      const t = rand();
+      let x, y, z;
+      if (t < 0.17) { [x, y] = onRoundRect(3.3, 2.1, 0.08, rand()); y += 1.05; z = 0; }
+      else if (t < 0.5) {
+        const row = (rand() * 11) | 0;
+        const indent = ((row * 7) % 4) * 0.2, len = 0.5 + ((row * 13) % 7) * 0.2;
+        const split = (row * 5) % 3 === 0;
+        let u = rand() * len;
+        if (split && u > len * 0.45) u += 0.12;
+        x = -1.4 + indent + u; y = 1.88 - row * 0.155 + (rand() - 0.5) * 0.02; z = 0.01;
+      } else if (t < 0.6) {
+        x = (rand() - 0.5) * 3.3; y = rand() * 2.1; z = -0.05;
+      } else if (t < 0.85) {
+        const kr = (rand() * 5) | 0, kc = (rand() * 13) | 0;
+        x = -1.38 + kc * 0.23 + (rand() - 0.5) * 0.15; z = 0.28 + kr * 0.2 + (rand() - 0.5) * 0.13; y = 0;
+      } else if (t < 0.92) { [x, z] = onRoundRect(1.0, 0.6, 0.06, rand()); z += 1.62; y = 0; }
+      else { [x, z] = onRoundRect(3.5, 2.2, 0.12, rand()); z += 1.1; y = 0; }
+      if (t < 0.6) [y, z] = rotX(y, z, -0.22);
+      y -= 0.75; z -= 0.9;
+      [y, z] = rotX(y, z, 0.42);
+      put(5, i, x * 0.8, (y + 0.05) * 0.8, z * 0.8);
+    }
+
+    // ---- 6: two meshing gears
+    {
+      const big = rand() < 0.64;
+      const R = big ? 1.25 : 0.78, teeth = big ? 14 : 9, cx = big ? -0.55 : 1.33, cy = big ? 0.28 : -0.66, off = big ? 0 : Math.PI / 9;
+      const d = big ? 0.34 : 0.28, depthR = 0.24;
+      const t = rand();
+      let r, a, z;
+      if (t < 0.46) {
+        a = rand() * 6.2832;
+        const f = ((((a - off) * teeth) / 6.2832) % 1 + 1) % 1;
+        r = f < 0.5 ? R : R - depthR;
+        z = (rand() < 0.5 ? -1 : 1) * d / 2;
+      } else if (t < 0.62) {
+        const k = (rand() * teeth) | 0;
+        a = off + ((k + (rand() < 0.5 ? 0 : 0.5)) * 6.2832) / teeth;
+        r = R - depthR + rand() * depthR; z = (rand() - 0.5) * d;
+      } else if (t < 0.74) { a = rand() * 6.2832; r = (R - depthR) * 0.72; z = (rand() < 0.5 ? -1 : 1) * d / 2; }
+      else if (t < 0.86) { a = rand() * 6.2832; r = R * 0.22; z = (rand() - 0.5) * d * 1.6; }
+      else { const k = (rand() * 5) | 0; a = off + (k * 6.2832) / 5 + (rand() - 0.5) * 0.06; r = R * 0.22 + rand() * ((R - depthR) * 0.72 - R * 0.22); z = (rand() < 0.5 ? -1 : 1) * d / 2; }
+      put(6, i, (cx + r * Math.cos(a)) * 0.95, (cy + r * Math.sin(a)) * 0.95, z);
+    }
+
+    // ---- 7: code brackets </> with a cloud of code dashes behind
+    {
+      const segs = [[-0.55, 0.95, -1.55, 0], [-1.55, 0, -0.55, -0.95], [0.38, 1.2, -0.38, -1.2], [0.55, 0.95, 1.55, 0], [1.55, 0, 0.55, -0.95]];
+      let x, y, z;
+      if (rand() < 0.76) {
+        const sg = segs[(rand() * segs.length) | 0], u = rand();
+        const dx = sg[2] - sg[0], dy = sg[3] - sg[1], L = Math.hypot(dx, dy);
+        const side = rand() < 0.5 ? -1 : 1, w = 0.11;
+        x = sg[0] + dx * u - (dy / L) * side * w; y = sg[1] + dy * u + (dx / L) * side * w;
+        z = (rand() < 0.65 ? (rand() < 0.5 ? -1 : 1) * 0.16 : (rand() - 0.5) * 0.32);
+      } else {
+        let row, col, tries = 0;
+        do { row = ((rand() * 14) | 0) - 7; col = ((rand() * 9) | 0) - 4; } while ((col / 4.6) ** 2 + (row / 7.4) ** 2 > 1 && ++tries < 6);
+        const len = 0.18 + (((row * 31 + col * 17) % 5 + 5) % 5) * 0.07;
+        x = col * 0.55 + rand() * len; y = row * 0.28; z = -1.1 - (((row + col) % 3 + 3) % 3) * 0.25;
+      }
+      put(7, i, x * 0.95, y * 0.95, z);
+    }
   }
   return { P, color, rnd, dust };
 }
@@ -193,12 +305,14 @@ function buildNetworkGlobe(count, radius) {
 
 const VERT = /* glsl */`
 attribute vec3 aP1; attribute vec3 aP2; attribute vec3 aP3;
+attribute vec3 aP4; attribute vec3 aP5; attribute vec3 aP6; attribute vec3 aP7;
 attribute vec3 aColor; attribute vec4 aRand; attribute float aDust;
-uniform vec4 uW; uniform float uTime; uniform float uEnergy; uniform float uSize;
+uniform vec4 uW; uniform vec4 uW2; uniform vec3 uShock; uniform float uTime; uniform float uEnergy; uniform float uSize;
 uniform float uPR; uniform float uOpacity; uniform vec2 uMouse; uniform float uMouseOn; uniform float uAspect;
 varying vec3 vColor; varying float vA;
 void main() {
-  vec3 p = position * uW.x + aP1 * uW.y + aP2 * uW.z + aP3 * uW.w;
+  vec3 p = position * uW.x + aP1 * uW.y + aP2 * uW.z + aP3 * uW.w
+        + aP4 * uW2.x + aP5 * uW2.y + aP6 * uW2.z + aP7 * uW2.w;
   float ph = aRand.z * 6.2831;
   p += 0.03 * vec3(sin(uTime * 0.6 + ph), cos(uTime * 0.5 + ph * 1.3), sin(uTime * 0.4 + ph * 0.7)) * (1.0 + aDust * 4.0);
   float e = uEnergy * (1.0 - aDust * 0.7);
@@ -212,6 +326,12 @@ void main() {
   vec2 dm = clip.xy / clip.w - uMouse; dm.x *= uAspect;
   float md = length(dm);
   mv.xy += (dm / (md + 0.001)) * uMouseOn * smoothstep(0.32, 0.0, md) * 0.32;
+  // click shockwave: an expanding ring that pushes particles outward and forward
+  vec2 ds = clip.xy / clip.w - uShock.xy; ds.x *= uAspect;
+  float sd = length(ds);
+  float ring = exp(-pow((sd - uShock.z * 1.5) * 6.0, 2.0)) * max(0.0, 1.0 - uShock.z / 1.2);
+  mv.xy += (ds / (sd + 0.001)) * ring * 0.42;
+  mv.z += ring * 0.9;
   gl_Position = projectionMatrix * mv;
   float depth = -mv.z;
   float size = uSize * (0.55 + aRand.x * 0.95) * (1.0 - aDust * 0.5) * (1.0 + e * 0.55);
@@ -266,12 +386,14 @@ export function initScene(canvas) {
   geo.setAttribute('aP1', new BufferAttribute(P[1], 3));
   geo.setAttribute('aP2', new BufferAttribute(P[2], 3));
   geo.setAttribute('aP3', new BufferAttribute(P[3], 3));
+  for (let k = 4; k < SHAPES; k++) geo.setAttribute('aP' + k, new BufferAttribute(P[k], 3));
   geo.setAttribute('aColor', new BufferAttribute(color, 3));
   geo.setAttribute('aRand', new BufferAttribute(rnd, 4));
   geo.setAttribute('aDust', new BufferAttribute(dust, 1));
 
   const uniforms = {
-    uW: { value: new Vector4(1, 0, 0, 0) },
+    uW: { value: new Vector4(1, 0, 0, 0) }, uW2: { value: new Vector4(0, 0, 0, 0) },
+    uShock: { value: new Vector3(0, 0, 9) },
     uTime: { value: 0 }, uEnergy: { value: 0 }, uSize: { value: tier.size },
     uPR: { value: dpr }, uOpacity: { value: 1 },
     uMouse: { value: new Vector2(9, 9) }, uMouseOn: { value: 0 }, uAspect: { value: 1 },
@@ -311,13 +433,15 @@ export function initScene(canvas) {
 
   /* ---- scroll-driven keyframes from [data-shape] sections */
   let keyframes = [], keyframesDirty = true;
+  const fs = parseInt(new URLSearchParams(location.search).get('shape'), 10);
+  const forceShape = fs >= 0 && fs < SHAPES ? fs : null; // ?shape=N previews one shape
   function readKeyframes() {
     const narrow = innerWidth < 860;
     keyframes = [...document.querySelectorAll('[data-shape]')].map((el) => {
       const r = el.getBoundingClientRect(), d = el.dataset, hero = 'hero' in d;
       const kf = {
         y: r.top + scrollY + r.height / 2,
-        shape: Math.max(0, Math.min(3, parseInt(d.shape, 10) || 0)),
+        shape: forceShape ?? Math.max(0, Math.min(SHAPES - 1, parseInt(d.shape, 10) || 0)),
         x: narrow ? 0 : parseFloat(d.x || 0),
         oy: narrow ? (hero ? 0.28 : 0.02) : parseFloat(d.y || 0),
         s: (parseFloat(d.scale || 1)) * (narrow ? (hero ? 0.7 : 0.82) : 1),
@@ -338,7 +462,7 @@ export function initScene(canvas) {
     keyframesDirty = false;
   }
 
-  const w = [1, 0, 0, 0];
+  const w = new Array(SHAPES).fill(0); w[0] = 1;
   const cur = { x: 0, oy: 0, s: 1, dim: 1 };
   let firstFrame = true;
 
@@ -352,7 +476,7 @@ export function initScene(canvas) {
       }
     }
     const e = smooth(0.3, 0.7, f);
-    const tw = [0, 0, 0, 0];
+    const tw = new Array(SHAPES).fill(0);
     tw[a.shape] += 1 - e; tw[b.shape] += e;
     const mix = (p, q) => p + (q - p) * e;
     return { tw, x: mix(a.x, b.x), oy: mix(a.oy, b.oy), s: mix(a.s, b.s), dim: mix(a.dim, b.dim) };
@@ -370,6 +494,13 @@ export function initScene(canvas) {
     document.addEventListener('mouseleave', () => { mouseOnT = 0; });
   }
   const look = new Vector2(), ZERO = new Vector2();
+  let lastY = scrollY, velS = 0, shockAge = 9;
+  if (tierName !== 'low' && !reduceMotion) {
+    addEventListener('pointerdown', (e) => {
+      uniforms.uShock.value.set((e.clientX / innerWidth) * 2 - 1, -((e.clientY / innerHeight) * 2 - 1), 0);
+      shockAge = 0;
+    }, { passive: true });
+  }
 
   /* ---- adaptive quality */
   let drawCount = tier.count, slowTime = 0, slowFrames = 0, calm = 0;
@@ -423,16 +554,22 @@ export function initScene(canvas) {
     if (keyframesDirty) readKeyframes();
     const tg = scrollTarget();
     const kf = firstFrame || reduceMotion ? 1 : 1 - Math.exp(-dt * 3.4);
-    for (let i = 0; i < 4; i++) w[i] += (tg.tw[i] - w[i]) * kf;
+    for (let i = 0; i < SHAPES; i++) w[i] += (tg.tw[i] - w[i]) * kf;
     cur.x += (tg.x - cur.x) * kf; cur.oy += (tg.oy - cur.oy) * kf;
     cur.s += (tg.s - cur.s) * kf; cur.dim += (tg.dim - cur.dim) * kf;
 
     if (!reduceMotion) time += dt;
     uniforms.uTime.value = time;
     uniforms.uW.value.set(w[0], w[1], w[2], w[3]);
+    uniforms.uW2.value.set(w[4], w[5], w[6], w[7]);
     if (intro > 0 && !document.documentElement.classList.contains('preloading')) intro = Math.max(0, intro - dt / 2.6);
     const introE = intro * intro * (3 - 2 * intro);
-    uniforms.uEnergy.value = Math.max(introE, Math.min(1, (1 - Math.max(w[0], w[1], w[2], w[3])) * 2) * (reduceMotion ? 0.3 : 1));
+    // fast scrolling makes the particles scatter a little
+    const sy = scrollY, vel = Math.abs(sy - lastY) / Math.max(dt, 0.001) / innerHeight; lastY = sy;
+    velS += (Math.min(vel, 6) - velS) * (1 - Math.exp(-dt * 5));
+    const scrollKick = reduceMotion ? 0 : Math.min(0.14, velS * 0.035);
+    uniforms.uEnergy.value = Math.max(introE, Math.min(1, (1 - Math.max(...w)) * 2) * (reduceMotion ? 0.3 : 1)) + scrollKick;
+    if (shockAge < 5) { shockAge += dt; uniforms.uShock.value.z = shockAge; }
     uniforms.uOpacity.value = cur.dim;
     if (netGlobe) netGlobe.material.opacity = w[1] * cur.dim * 0.26;
 
