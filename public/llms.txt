@@ -1,10 +1,9 @@
 # CloudBridge Technologies
 
-> CloudBridge Technologies is a software development company in Coimbatore, Tamil Nadu, India, founded by Dhanush. It builds websites, 3D websites, Android and iOS mobile apps, custom business software and desktop applications for businesses in Coimbatore, across India and worldwide.
+> CloudBridge Technologies is a software development company in Coimbatore, Tamil Nadu, India. It builds websites, 3D websites, Android and iOS mobile apps, custom business software and desktop applications for businesses in Coimbatore, across India and worldwide.
 
 ## Key facts
 - Company: CloudBridge Technologies
-- Founder: Dhanush
 - Location: Coimbatore, Tamil Nadu, India
 - Projects: 100+ projects delivered
 - Industries served: hospitality, construction, manufacturing, automotive, real estate and infrastructure, automation
@@ -12,7 +11,7 @@
 - WhatsApp: +91 97906 86377
 - Email: technologiescloudbridge@gmail.com
 - Website: https://cloudbridge-technologies.com/
-- How they work: fixed written estimates, clients own the source code, post-launch support, reply within one business day, clients work directly with the founder
+- How they work: fixed written estimates, clients own the source code, post-launch support, reply within one business day, clients work directly with the developer building their software
 
 ## Services
 - [Website Development](https://cloudbridge-technologies.com/services/website-development/): business websites, landing pages, e-commerce stores and web portals, SEO-ready and mobile-first
