@@ -132,10 +132,124 @@ function magneticButtons() {
   });
 }
 
+
+/* ------------------------------------ client logos as a rotating 3D ring */
+function logoRing() {
+  const wall = document.querySelector('.clientwall');
+  const group = wall?.querySelector('.marquee__group');
+  if (!wall || !group) return;
+  const chips = [...group.querySelectorAll('.logo-chip')];
+  if (chips.length < 6) return;
+  const n = chips.length;
+  const ring = document.createElement('div');
+  ring.className = 'ring3d';
+  ring.setAttribute('role', 'list');
+  ring.setAttribute('aria-label', 'Businesses we have worked with');
+  const spin = document.createElement('div');
+  spin.className = 'ring3d__spin';
+  chips.forEach((c, i) => {
+    const item = document.createElement('div');
+    item.className = 'ring3d__item';
+    item.setAttribute('role', 'listitem');
+    item.style.setProperty('--a', `${(360 / n) * i}deg`);
+    item.appendChild(c.querySelector('img').cloneNode(true));
+    spin.appendChild(item);
+  });
+  ring.appendChild(spin);
+  const marquee = wall.querySelector('.marquee');
+  marquee.hidden = true;
+  marquee.after(ring);
+  const setR = () => {
+    const w = ring.querySelector('.ring3d__item').offsetWidth + (innerWidth < 640 ? 10 : 22);
+    ring.style.setProperty('--r', `${Math.round((w / 2) / Math.tan(Math.PI / n))}px`);
+  };
+  setR(); addEventListener('resize', setR, { passive: true });
+  // drag (or swipe) to spin it yourself; it keeps turning on its own otherwise
+  let angle = 0, vel = 0.12, drag = null, last = performance.now(), visible = false;
+  new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible) requestAnimationFrame(loop); }).observe(ring);
+  ring.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, a: angle }; ring.setPointerCapture(e.pointerId); ring.classList.add('is-drag'); });
+  ring.addEventListener('pointermove', (e) => { if (!drag) return; const na = drag.a + (e.clientX - drag.x) * 0.35; vel = (na - angle) * 0.5; angle = na; });
+  const end = () => { drag = null; ring.classList.remove('is-drag'); };
+  ring.addEventListener('pointerup', end); ring.addEventListener('pointercancel', end);
+  let hover = false;
+  ring.addEventListener('pointerenter', () => { hover = true; }); ring.addEventListener('pointerleave', () => { hover = false; });
+  function loop(now) {
+    if (!visible) return;
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (!drag) {
+      const base = hover ? 0.02 : 0.12;
+      vel += (base - vel) * (1 - Math.exp(-dt * 1.5));
+      angle += vel * dt * 60;
+    }
+    spin.style.transform = `translateZ(calc(var(--r) * -1)) rotateY(${angle.toFixed(2)}deg)`;
+    requestAnimationFrame(loop);
+  }
+}
+
+/* ------------------------------------- big 3D brand word in the footer */
+function footerWord() {
+  const foot = document.querySelector('.site-footer .site-footer__bottom');
+  if (!foot) return;
+  const word = document.createElement('div');
+  word.className = 'word3d';
+  word.setAttribute('aria-hidden', 'true');
+  const stack = document.createElement('div');
+  stack.className = 'word3d__stack';
+  const LAYERS = 14;
+  for (let i = 0; i < LAYERS; i++) {
+    const l = document.createElement('span');
+    l.textContent = 'CLOUDBRIDGE';
+    l.style.setProperty('--z', i);
+    if (i === LAYERS - 1) l.className = 'is-face';
+    stack.appendChild(l);
+  }
+  word.appendChild(stack);
+  foot.before(word);
+  let visible = false, tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
+  new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible) tick(); }).observe(word);
+  addEventListener('pointermove', (e) => { tx = (e.clientX / innerWidth - 0.5) * 2; ty = (e.clientY / innerHeight - 0.5) * 2; }, { passive: true });
+  function tick() {
+    if (!visible) { raf = 0; return; }
+    const r = word.getBoundingClientRect();
+    const sp = Math.max(-1, Math.min(1, ((r.top + r.height / 2) - innerHeight / 2) / (innerHeight / 2)));
+    const gx = finePointer ? tx : Math.sin(performance.now() / 1600) * 0.6;
+    cx += (gx - cx) * 0.08; cy += ((finePointer ? ty : 0) + sp * 0.8 - cy) * 0.08;
+    stack.style.transform = `rotateX(${(-cy * 16 + 10).toFixed(2)}deg) rotateY(${(cx * 22).toFixed(2)}deg)`;
+    raf = requestAnimationFrame(tick);
+  }
+}
+
+/* ------------------- hero tilts back into the screen as you scroll away */
+function heroDepth() {
+  const hero = document.querySelector('.hero__center, .page-hero .hero__content');
+  if (!hero) return;
+  const sec = hero.closest('section');
+  const tags = [...document.querySelectorAll('.htag')];
+  hero.classList.add('fx-hero');
+  let raf = 0, mx = 0, my = 0;
+  const update = () => {
+    raf = 0;
+    const h = sec.offsetHeight || innerHeight;
+    const p = Math.max(0, Math.min(1, scrollY / (h * 0.75)));
+    if (p >= 1 && hero.dataset.done) return;
+    hero.dataset.done = p >= 1 ? '1' : '';
+    hero.style.transform = p > 0 ? `perspective(1000px) translate3d(0, ${(p * 60).toFixed(1)}px, ${(-p * 260).toFixed(1)}px) rotateX(${(p * 22).toFixed(2)}deg)` : '';
+    hero.style.opacity = p > 0 ? String(Math.max(0, 1 - p * 1.15)) : '';
+    tags.forEach((t, i) => { t.style.translate = `${(mx * (14 + i * 7)).toFixed(1)}px ${(my * (10 + i * 5) - p * (60 + i * 30)).toFixed(1)}px`; });
+  };
+  const kick = () => { if (!raf) raf = requestAnimationFrame(update); };
+  addEventListener('scroll', kick, { passive: true });
+  if (finePointer) addEventListener('pointermove', (e) => { mx = (e.clientX / innerWidth - 0.5) * 2; my = (e.clientY / innerHeight - 0.5) * 2; kick(); }, { passive: true });
+  kick();
+}
+
 export function initFx() {
   root.classList.add('fx-on');
   splitHeadings();
   tiltCards();
   scrollPhotos();
   magneticButtons();
+  logoRing();
+  footerWord();
+  heroDepth();
 }

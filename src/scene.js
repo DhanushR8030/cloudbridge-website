@@ -307,7 +307,7 @@ const VERT = /* glsl */`
 attribute vec3 aP1; attribute vec3 aP2; attribute vec3 aP3;
 attribute vec3 aP4; attribute vec3 aP5; attribute vec3 aP6; attribute vec3 aP7;
 attribute vec3 aColor; attribute vec4 aRand; attribute float aDust;
-uniform vec4 uW; uniform vec4 uW2; uniform vec3 uShock; uniform float uTime; uniform float uEnergy; uniform float uSize;
+uniform vec4 uW; uniform vec4 uW2; uniform vec3 uShock; uniform float uSwirl; uniform float uTime; uniform float uEnergy; uniform float uSize;
 uniform float uPR; uniform float uOpacity; uniform vec2 uMouse; uniform float uMouseOn; uniform float uAspect;
 varying vec3 vColor; varying float vA;
 void main() {
@@ -318,6 +318,12 @@ void main() {
   float e = uEnergy * (1.0 - aDust * 0.7);
   vec3 dir = vec3(cos(ph * 3.0), sin(ph * 2.0), cos(ph * 5.0));
   p += dir * e * (0.6 + aRand.w * 2.6);
+  // vortex: while morphing, particles spiral around the centre (inner ones faster)
+  float rr = length(p.xy);
+  float va = uSwirl * (1.6 + aRand.w) * exp(-rr * 0.38);
+  float vc = cos(va), vs = sin(va);
+  p.xy = mat2(vc, -vs, vs, vc) * p.xy;
+  p.z += uSwirl * (aRand.y - 0.5) * 1.4;
   float ang = e * 2.0 * (aRand.w - 0.3);
   float cs = cos(ang), sn = sin(ang);
   p.xz = mat2(cs, -sn, sn, cs) * p.xz;
@@ -393,7 +399,7 @@ export function initScene(canvas) {
 
   const uniforms = {
     uW: { value: new Vector4(1, 0, 0, 0) }, uW2: { value: new Vector4(0, 0, 0, 0) },
-    uShock: { value: new Vector3(0, 0, 9) },
+    uShock: { value: new Vector3(0, 0, 9) }, uSwirl: { value: 0 },
     uTime: { value: 0 }, uEnergy: { value: 0 }, uSize: { value: tier.size },
     uPR: { value: dpr }, uOpacity: { value: 1 },
     uMouse: { value: new Vector2(9, 9) }, uMouseOn: { value: 0 }, uAspect: { value: 1 },
@@ -494,7 +500,7 @@ export function initScene(canvas) {
     document.addEventListener('mouseleave', () => { mouseOnT = 0; });
   }
   const look = new Vector2(), ZERO = new Vector2();
-  let lastY = scrollY, velS = 0, shockAge = 9;
+  let lastY = scrollY, velS = 0, shockAge = 9, swirlS = 0, swirlDir = 1, lastSwirlY = scrollY;
   if (tierName !== 'low' && !reduceMotion) {
     addEventListener('pointerdown', (e) => {
       uniforms.uShock.value.set((e.clientX / innerWidth) * 2 - 1, -((e.clientY / innerHeight) * 2 - 1), 0);
@@ -569,6 +575,13 @@ export function initScene(canvas) {
     velS += (Math.min(vel, 6) - velS) * (1 - Math.exp(-dt * 5));
     const scrollKick = reduceMotion ? 0 : Math.min(0.14, velS * 0.035);
     uniforms.uEnergy.value = Math.max(introE, Math.min(1, (1 - Math.max(...w)) * 2) * (reduceMotion ? 0.3 : 1)) + scrollKick;
+    // cinematic transitions: swirl and dive the camera in while between shapes
+    const trans = Math.min(1, (1 - Math.max(...w)) * 2);
+    swirlDir = scrollY >= lastSwirlY ? 1 : -1; lastSwirlY = scrollY;
+    swirlS += ((reduceMotion ? 0 : trans * swirlDir) - swirlS) * (1 - Math.exp(-dt * 2.5));
+    uniforms.uSwirl.value = swirlS * 1.15;
+    camera.position.z = CAM_Z - Math.abs(swirlS) * 1.7;
+    camera.rotation.z = swirlS * 0.1;
     if (shockAge < 5) { shockAge += dt; uniforms.uShock.value.z = shockAge; }
     uniforms.uOpacity.value = cur.dim;
     if (netGlobe) netGlobe.material.opacity = w[1] * cur.dim * 0.26;
