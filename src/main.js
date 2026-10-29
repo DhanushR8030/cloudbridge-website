@@ -212,6 +212,11 @@ function liteDevice() {
   if (nav.hardwareConcurrency && nav.hardwareConcurrency <= 2) return true;
   return false;
 }
+// 3D interface effects (tilt cards, flipping headings, photo depth, magnetic buttons)
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !liteDevice()) {
+  import('./fx.js').then((m) => m.initFx()).catch(() => {});
+}
+
 if (canvas) {
   const fail = () => root.classList.add('no-webgl');
   if (liteDevice()) fail();

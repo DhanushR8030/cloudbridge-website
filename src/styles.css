@@ -671,3 +671,36 @@ a.live3d:hover { border-color: rgba(34, 164, 71, .5); color: var(--green-ink); }
 
 /* visually hidden, still read by screen readers and search engines */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+
+/* ============================================================ 3D interface effects (src/fx.js) */
+/* sections rise in with depth */
+.fx-on [data-reveal] { transform: perspective(1100px) translate3d(0, 46px, -60px) rotateX(12deg); transform-origin: 50% 100%; }
+.fx-on [data-reveal].is-in { transform: none; }
+
+/* tilt cards */
+.fx-tilt { position: relative; }
+.fx-on .fx-tilt:not([data-reveal]), .fx-on .fx-tilt.fx-ready.fx-ready {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform .6s var(--ease), box-shadow .4s var(--ease), opacity .9s var(--ease); transition-delay: 0s; }
+.fx-on .fx-tilt.is-tilting.is-tilting { transition: transform .12s linear, box-shadow .4s var(--ease); box-shadow: 0 30px 60px -28px rgba(10, 40, 20, .35); }
+.fx-glare { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 3; opacity: 0; transition: opacity .4s; mix-blend-mode: soft-light;
+  background: radial-gradient(420px circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, .75), rgba(255, 255, 255, 0) 55%); }
+.fx-tilt.is-tilting .fx-glare { opacity: 1; }
+
+/* headings flip up word by word */
+.fx-split .fx-w { display: inline-block; perspective: 600px; }
+.fx-split .fx-wi { display: inline-block; transform-origin: 50% 100%; transform: translateY(.55em) rotateX(-85deg); opacity: 0;
+  transition: transform .9s cubic-bezier(.2, .8, .2, 1), opacity .6s ease; transition-delay: calc(var(--i) * 55ms); }
+.fx-split.is-in .fx-wi { transform: none; opacity: 1; }
+
+/* photos drift and tilt with scroll */
+.fx-depth { perspective: 1000px; }
+.fx-depth img { transition: transform .25s linear; transform: rotateX(calc(var(--sp, 0) * 7deg)) scale(1.08) translateY(calc(var(--sp, 0) * -4%)); transform-origin: 50% 50%; will-change: transform; }
+
+/* magnetic buttons */
+.fx-mag { translate: var(--mx2, 0px) var(--my2, 0px); transition: translate .35s var(--ease), background .3s, color .3s, box-shadow .3s, transform .3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-on [data-reveal], .fx-tilt, .fx-split .fx-wi, .fx-depth img { transition: transform .25s linear; transform: none !important; opacity: 1 !important; transition: none !important; }
+}
