@@ -668,3 +668,6 @@ a.live3d:hover { border-color: rgba(34, 164, 71, .5); color: var(--green-ink); }
 @media (max-width: 1020px) { .related--5 { grid-template-columns: 1fr; } }
 @media (max-width: 640px) { .facts dl div { grid-template-columns: 1fr; gap: 2px; } }
 @media (prefers-reduced-motion: reduce) { .hero__kicker { animation: none; opacity: 1; } }
+
+/* visually hidden, still read by screen readers and search engines */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }

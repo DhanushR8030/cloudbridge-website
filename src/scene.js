@@ -234,9 +234,20 @@ void main() {
 
 /* ------------------------------------------------------------------ scene */
 
+function softwareGpu(gl) {
+  const ext = gl.getExtension('WEBGL_debug_renderer_info');
+  const r = ext ? String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) || '') : '';
+  return /swiftshader|llvmpipe|software|basic render/i.test(r);
+}
+
+// Returns false when this device can't run the animation smoothly, so the
+// caller shows the static background instead.
 export function initScene(canvas) {
   const renderer = new WebGLRenderer({ canvas, antialias: false, alpha: false, stencil: false, depth: false });
   const forced = new URLSearchParams(location.search).get('quality');
+  // No real graphics chip: the CPU would have to draw every frame, which
+  // freezes the page on phones. Use the static background.
+  if (!TIERS[forced] && softwareGpu(renderer.getContext())) { renderer.dispose(); return false; }
   const tierName = TIERS[forced] ? forced : detectTier(renderer.getContext());
   const tier = { ...TIERS[tierName] };
   document.documentElement.dataset.sceneTier = tierName;
@@ -370,8 +381,23 @@ export function initScene(canvas) {
     } else if (dpr > 1) {
       dpr = 1; renderer.setPixelRatio(1); uniforms.uPR.value = 1; cw = 0;
       resize();
+    } else if (++strikes >= 2) {
+      giveUp();
     }
   }
+  // Still choppy at the lowest quality: stop drawing and fade back to the
+  // static background, so scrolling and taps stay smooth.
+  let strikes = 0;
+  function giveUp() {
+    running = false;
+    const root = document.documentElement;
+    root.classList.remove('scene-ready');
+    root.classList.add('no-webgl');
+    setTimeout(() => { ro.disconnect(); geo.dispose(); material.dispose(); renderer.dispose(); }, 1500);
+  }
+  // Low-end devices: 30 frames a second is plenty and halves the work.
+  const minGap = tierName === 'low' ? 1000 / 31 : 0;
+  let lastDraw = 0;
 
   /* ---- loop */
   let last = performance.now(), time = 0, running = true, intro = reduceMotion ? 0 : 1;
@@ -379,6 +405,8 @@ export function initScene(canvas) {
     if (!running) return;
     requestAnimationFrame(tick);
     if (document.hidden) { last = now; return; }
+    if (minGap && now - lastDraw < minGap) return;
+    lastDraw = now;
     const rawDt = (now - last) / 1000;
     last = now;
     const dt = Math.min(rawDt, 0.1);
@@ -387,7 +415,7 @@ export function initScene(canvas) {
       slowTime += rawDt; slowFrames++;
       if (slowTime > 1.4) {
         const avg = slowTime / slowFrames;
-        if (avg > 1 / 36) { calm = 0; degrade(); } else calm++;
+        if (avg > (minGap ? 1 / 22 : 1 / 36)) { calm = 0; degrade(); } else calm++;
         slowTime = 0; slowFrames = 0;
       }
     }

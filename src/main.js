@@ -43,7 +43,7 @@ else if (preloader) {
     if (finished) return;
     const el = now - t0;
     const sceneDone = root.classList.contains('scene-ready') || root.classList.contains('no-webgl');
-    const allReady = document.readyState === 'complete' && fontsReady && (sceneDone || el > 4800);
+    const allReady = document.readyState === 'complete' && fontsReady && (sceneDone || el > 4800 || matchMedia('(pointer: coarse)').matches);
     const target = (allReady && el >= MIN) || el > MAX ? 1 : Math.min(0.92, (el / MIN) * 0.92);
     shown += (target - shown) * 0.11;
     if (target === 1 && shown > 0.985) { finish(); return; }
@@ -201,9 +201,26 @@ document.querySelectorAll('form[data-cb-form]').forEach((form) => {
 
 /* ---- 3D scene: loaded after the page is interactive so text paints first */
 const canvas = document.getElementById('scene');
+// Weak phones, Data Saver and slow connections get the light static
+// background instead: the 3D code is never even downloaded.
+function liteDevice() {
+  const q = new URLSearchParams(location.search).get('quality');
+  if (q) return q === 'off';
+  const nav = navigator, conn = nav.connection || {};
+  if (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || '')) return true;
+  if (nav.deviceMemory && nav.deviceMemory <= 2) return true;
+  if (nav.hardwareConcurrency && nav.hardwareConcurrency <= 2) return true;
+  return false;
+}
 if (canvas) {
   const fail = () => root.classList.add('no-webgl');
-  const start = () => import('./scene.js').then((m) => m.initScene(canvas)).catch(fail);
-  const schedule = () => ('requestIdleCallback' in window ? requestIdleCallback(start, { timeout: 1200 }) : setTimeout(start, 200));
-  if (document.readyState === 'complete') schedule(); else addEventListener('load', schedule, { once: true });
+  if (liteDevice()) fail();
+  else {
+    const touch = matchMedia('(pointer: coarse)').matches;
+    const start = () => import('./scene.js').then((m) => { if (m.initScene(canvas) === false) fail(); }).catch(fail);
+    // Phones: let the page settle and respond to taps first, then start the animation.
+    const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(start, { timeout: touch ? 2500 : 1200 }) : setTimeout(start, 200));
+    const schedule = () => (touch ? setTimeout(idle, 1200) : idle());
+    if (document.readyState === 'complete') schedule(); else addEventListener('load', schedule, { once: true });
+  }
 }
