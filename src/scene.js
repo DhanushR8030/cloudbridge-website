@@ -464,6 +464,7 @@ export function initScene(canvas) {
       }
       return kf;
     });
+    keyframes.sort((a, b) => a.y - b.y);
     if (!keyframes.length) keyframes = [{ y: 0, shape: 0, x: 0, oy: 0, s: 1, dim: 1 }];
     keyframesDirty = false;
   }
@@ -609,6 +610,7 @@ export function initScene(canvas) {
   resize();
   addEventListener('load', () => { keyframesDirty = true; });
   addEventListener('resize', () => { keyframesDirty = true; }, { passive: true });
+  addEventListener('cb:layout', () => { keyframesDirty = true; });
   document.fonts?.ready.then(() => { keyframesDirty = true; });
 
   canvas.addEventListener('webglcontextlost', (e) => {

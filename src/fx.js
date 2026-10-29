@@ -1,3 +1,4 @@
+import Lenis from 'lenis';
 // 3D interface effects that sit on top of the particle scene.
 // Everything here only uses transforms and opacity (GPU-friendly), runs only
 // for elements on screen, and is skipped for "reduce motion" and weak devices.
@@ -19,12 +20,8 @@ function tiltCards() {
       setTimeout(() => { if (el.classList.contains('is-in')) ready(); }, 2500);
       new MutationObserver((m, mo) => { if (el.classList.contains('is-in')) { setTimeout(ready, 1600); mo.disconnect(); } }).observe(el, { attributes: true, attributeFilter: ['class'] });
     }
-    const glare = document.createElement('span');
-    glare.className = 'fx-glare';
-    glare.setAttribute('aria-hidden', 'true');
-    el.appendChild(glare);
     const big = el.offsetWidth > 520;
-    const max = big ? 3.5 : 9;
+    const max = big ? 1.5 : 4;
     let raf = 0, rx = 0, ry = 0, gx = 50, gy = 50;
     const apply = () => {
       raf = 0;
@@ -125,8 +122,8 @@ function magneticButtons() {
     b.addEventListener('pointermove', (e) => {
       const r = b.getBoundingClientRect();
       const x = (e.clientX - r.left - r.width / 2) / (r.width / 2), y = (e.clientY - r.top - r.height / 2) / (r.height / 2);
-      b.style.setProperty('--mx2', `${(x * 7).toFixed(2)}px`);
-      b.style.setProperty('--my2', `${(y * 5).toFixed(2)}px`);
+      b.style.setProperty('--mx2', `${(x * 4).toFixed(2)}px`);
+      b.style.setProperty('--my2', `${(y * 3).toFixed(2)}px`);
     }, { passive: true });
     b.addEventListener('pointerleave', () => { b.style.setProperty('--mx2', '0px'); b.style.setProperty('--my2', '0px'); });
   });
@@ -186,39 +183,6 @@ function logoRing() {
   }
 }
 
-/* ------------------------------------- big 3D brand word in the footer */
-function footerWord() {
-  const foot = document.querySelector('.site-footer .site-footer__bottom');
-  if (!foot) return;
-  const word = document.createElement('div');
-  word.className = 'word3d';
-  word.setAttribute('aria-hidden', 'true');
-  const stack = document.createElement('div');
-  stack.className = 'word3d__stack';
-  const LAYERS = 14;
-  for (let i = 0; i < LAYERS; i++) {
-    const l = document.createElement('span');
-    l.textContent = 'CLOUDBRIDGE';
-    l.style.setProperty('--z', i);
-    if (i === LAYERS - 1) l.className = 'is-face';
-    stack.appendChild(l);
-  }
-  word.appendChild(stack);
-  foot.before(word);
-  let visible = false, tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
-  new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible) tick(); }).observe(word);
-  addEventListener('pointermove', (e) => { tx = (e.clientX / innerWidth - 0.5) * 2; ty = (e.clientY / innerHeight - 0.5) * 2; }, { passive: true });
-  function tick() {
-    if (!visible) { raf = 0; return; }
-    const r = word.getBoundingClientRect();
-    const sp = Math.max(-1, Math.min(1, ((r.top + r.height / 2) - innerHeight / 2) / (innerHeight / 2)));
-    const gx = finePointer ? tx : Math.sin(performance.now() / 1600) * 0.6;
-    cx += (gx - cx) * 0.08; cy += ((finePointer ? ty : 0) + sp * 0.8 - cy) * 0.08;
-    stack.style.transform = `rotateX(${(-cy * 16 + 10).toFixed(2)}deg) rotateY(${(cx * 22).toFixed(2)}deg)`;
-    raf = requestAnimationFrame(tick);
-  }
-}
-
 /* ------------------- hero tilts back into the screen as you scroll away */
 function heroDepth() {
   const hero = document.querySelector('.hero__center, .page-hero .hero__content');
@@ -233,7 +197,7 @@ function heroDepth() {
     const p = Math.max(0, Math.min(1, scrollY / (h * 0.75)));
     if (p >= 1 && hero.dataset.done) return;
     hero.dataset.done = p >= 1 ? '1' : '';
-    hero.style.transform = p > 0 ? `perspective(1000px) translate3d(0, ${(p * 60).toFixed(1)}px, ${(-p * 260).toFixed(1)}px) rotateX(${(p * 22).toFixed(2)}deg)` : '';
+    hero.style.transform = p > 0 ? `translate3d(0, ${(p * 70).toFixed(1)}px, 0) scale(${(1 - p * 0.06).toFixed(4)})` : '';
     hero.style.opacity = p > 0 ? String(Math.max(0, 1 - p * 1.15)) : '';
     tags.forEach((t, i) => { t.style.translate = `${(mx * (14 + i * 7)).toFixed(1)}px ${(my * (10 + i * 5) - p * (60 + i * 30)).toFixed(1)}px`; });
   };
@@ -243,13 +207,174 @@ function heroDepth() {
   kick();
 }
 
+/* ------------------------------------------- smooth inertia scrolling */
+function smoothScroll() {
+  if (!finePointer) return; // phones keep their own native momentum scrolling
+  const lenis = new Lenis({ autoRaf: true, lerp: 0.095, anchors: { offset: -90 } });
+  window.__lenis = lenis;
+  // pause while the mobile menu is open
+  new MutationObserver(() => (root.classList.contains('nav-open') ? lenis.stop() : lenis.start()))
+    .observe(root, { attributes: true, attributeFilter: ['class'] });
+}
+
+/* ------------------------- "How we work": steps pinned while you scroll */
+function pinSteps() {
+  const boxes = document.querySelectorAll('[data-pinsteps]');
+  if (!boxes.length) return;
+  const all = [];
+  boxes.forEach((box) => {
+    const list = box.querySelector('.pinsteps__list');
+    const items = [...list.children];
+    const n = items.length;
+    const sec = box.closest('section');
+    box.classList.add('is-pinned');
+    box.style.setProperty('--n', n);
+    const stage = document.createElement('div');
+    stage.className = 'pinsteps__stage';
+    const rail = document.createElement('div');
+    rail.className = 'pinsteps__rail';
+    rail.setAttribute('aria-hidden', 'true');
+    rail.innerHTML = '<i class="pinsteps__bar"></i>' + items.map((li) =>
+      `<span class="pinsteps__tick"><b>${li.querySelector('.pinstep__n').textContent}</b>${li.querySelector('h3').textContent}</span>`).join('');
+    list.before(stage);
+    stage.append(rail, list);
+    const ticks = [...rail.querySelectorAll('.pinsteps__tick')];
+    // one particle shape per step: markers the 3D scene follows as you scroll
+    if (sec?.dataset.shape) {
+      const dim = sec.dataset.dim || '0.26';
+      sec.removeAttribute('data-shape');
+      items.forEach((li, i) => {
+        const m = document.createElement('div');
+        m.className = 'pinsteps__mark';
+        m.dataset.shape = li.dataset.stepShape || '1';
+        m.dataset.x = '0.3'; m.dataset.y = '0.02'; m.dataset.dim = dim; m.dataset.scale = '0.85';
+        m.style.top = `calc(${i} * var(--seg) + ${i === 0 ? 0 : 50}vh)`;
+        box.appendChild(m);
+      });
+    }
+    all.push({ box, stage, items, ticks, n, last: -1 });
+  });
+  let raf = 0;
+  const update = () => {
+    raf = 0;
+    const head = parseFloat(getComputedStyle(root).getPropertyValue('--header-h')) || 76;
+    all.forEach((o) => {
+      const r = o.box.getBoundingClientRect();
+      const total = Math.max(1, o.box.offsetHeight - o.stage.offsetHeight);
+      const p = Math.max(0, Math.min(1, (head - r.top) / total));
+      o.box.style.setProperty('--p', p.toFixed(4));
+      const active = Math.min(o.n - 1, Math.floor(p * o.n * 0.999));
+      if (active === o.last) return;
+      o.last = active;
+      o.items.forEach((li, i) => { li.classList.toggle('is-on', i === active); li.classList.toggle('is-past', i < active); });
+      o.ticks.forEach((t, i) => { t.classList.toggle('is-on', i === active); t.classList.toggle('is-done', i < active); });
+    });
+  };
+  const kick = () => { if (!raf) raf = requestAnimationFrame(update); };
+  addEventListener('scroll', kick, { passive: true });
+  addEventListener('resize', kick, { passive: true });
+  update();
+  dispatchEvent(new Event('cb:layout'));
+}
+
+/* ------------------------------------------- custom cursor (desktop) */
+function cursor() {
+  if (!finePointer) return;
+  const c = document.createElement('div');
+  c.className = 'cur';
+  c.setAttribute('aria-hidden', 'true');
+  c.innerHTML = '<span class="cur__ring"><span class="cur__label"></span></span><span class="cur__dot"></span>';
+  document.body.appendChild(c);
+  root.classList.add('cursor-on');
+  const ring = c.querySelector('.cur__ring'), dot = c.querySelector('.cur__dot'), label = c.querySelector('.cur__label');
+  let x = -100, y = -100, rx = x, ry = y, raf = 0;
+  const loop = () => {
+    rx += (x - rx) * 0.18; ry += (y - ry) * 0.18;
+    ring.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
+    dot.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    raf = Math.abs(x - rx) + Math.abs(y - ry) > 0.2 ? requestAnimationFrame(loop) : 0;
+  };
+  addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    x = e.clientX; y = e.clientY;
+    c.classList.add('is-in');
+    if (!raf) raf = requestAnimationFrame(loop);
+  }, { passive: true });
+  document.addEventListener('mouseleave', () => c.classList.remove('is-in'));
+  document.addEventListener('pointerdown', () => c.classList.add('is-down'));
+  document.addEventListener('pointerup', () => c.classList.remove('is-down'));
+  document.addEventListener('pointerover', (e) => {
+    const t = e.target;
+    const text = t.closest?.('input, textarea, select, [contenteditable]');
+    const view = t.closest?.('.svc-card, .bento__card, .related a, .industry');
+    const drag = t.closest?.('.ring3d');
+    const link = t.closest?.('a, button, summary, label, [role="button"]');
+    c.classList.toggle('is-text', !!text);
+    c.classList.toggle('is-link', !!link && !view);
+    const l = view ? 'View' : drag ? 'Drag' : '';
+    c.classList.toggle('has-label', !!l);
+    if (l) label.textContent = l;
+  });
+}
+
+/* ----------------------------- paragraphs that light up as you read them */
+function scrubText() {
+  const paras = [...document.querySelectorAll('[data-scrub]')];
+  if (!paras.length) return;
+  const data = paras.map((p) => {
+    const words = [];
+    const walk = (node) => {
+      [...node.childNodes].forEach((n) => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach((part) => {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+            const w = document.createElement('span'); w.className = 'sw'; w.textContent = part; words.push(w); frag.appendChild(w);
+          });
+          n.replaceWith(frag);
+        } else if (n.nodeType === 1) walk(n);
+      });
+    };
+    walk(p);
+    p.classList.add('is-scrub');
+    return { p, words, live: false, last: -1 };
+  });
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((en) => { const d = data.find((x) => x.p === en.target); if (d) d.live = en.isIntersecting; });
+    kick();
+  });
+  data.forEach((d) => io.observe(d.p));
+  let raf = 0;
+  const update = () => {
+    raf = 0;
+    const vh = innerHeight;
+    data.forEach((d) => {
+      if (!d.live) return;
+      const r = d.p.getBoundingClientRect();
+      const prog = Math.max(0, Math.min(1, (vh * 0.86 - r.top) / (r.height + vh * 0.42)));
+      const lit = prog * (d.words.length + 2);
+      const key = Math.round(lit * 8);
+      if (key === d.last) return;
+      d.last = key;
+      d.words.forEach((w, i) => { w.style.opacity = (0.18 + 0.82 * Math.max(0, Math.min(1, lit - i))).toFixed(3); });
+    });
+  };
+  const kick = () => { if (!raf) raf = requestAnimationFrame(update); };
+  addEventListener('scroll', kick, { passive: true });
+  kick();
+}
+
 export function initFx() {
   root.classList.add('fx-on');
+  smoothScroll();
+  pinSteps();
+  cursor();
+  scrubText();
   splitHeadings();
   tiltCards();
   scrollPhotos();
   magneticButtons();
   logoRing();
-  footerWord();
   heroDepth();
 }

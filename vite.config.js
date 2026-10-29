@@ -24,7 +24,7 @@ function preloadFonts() {
       order: 'post',
       handler(html, ctx) {
         if (!ctx.bundle || ctx.filename.includes('/admin/')) return html;
-        const files = Object.keys(ctx.bundle).filter((f) => /(inter|bricolage-grotesque)-latin-wght-normal-[\w-]+\.woff2$/.test(f));
+        const files = Object.keys(ctx.bundle).filter((f) => /(inter|inter-tight)-latin-wght-normal-[\w-]+\.woff2$/.test(f));
         const tags = files.map((f) => `<link rel="preload" href="/${f}" as="font" type="font/woff2" crossorigin>`).join('\n    ');
         return html.replace('<link rel="preconnect"', `${tags}\n    <link rel="preconnect"`);
       },

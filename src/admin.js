@@ -1,4 +1,4 @@
-import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/inter-tight';
 import '@fontsource-variable/inter';
 import './admin.css';
 

@@ -1,4 +1,4 @@
-import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/inter-tight';
 import '@fontsource-variable/inter';
 import './styles.css';
 import { SITE } from './site.config.js';
@@ -85,7 +85,8 @@ document.querySelectorAll('a[href="#top"]').forEach((a) => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+    if (window.__lenis) window.__lenis.scrollTo(0, { duration: 1.4 });
+    else scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
     history.pushState(null, '', location.pathname + location.search);
   });
 });
@@ -222,9 +223,10 @@ if (canvas) {
   if (liteDevice()) fail();
   else {
     const touch = matchMedia('(pointer: coarse)').matches;
+    let seenBefore = false; try { seenBefore = !!sessionStorage.getItem('cb-seen'); } catch {}
     const start = () => import('./scene.js').then((m) => { if (m.initScene(canvas) === false) fail(); }).catch(fail);
     // Phones: let the page settle and respond to taps first, then start the animation.
-    const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(start, { timeout: touch ? 2500 : 1200 }) : setTimeout(start, 200));
+    const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(start, { timeout: touch ? 2500 : (seenBefore ? 250 : 1200) }) : setTimeout(start, 200));
     const schedule = () => (touch ? setTimeout(idle, 1200) : idle());
     if (document.readyState === 'complete') schedule(); else addEventListener('load', schedule, { once: true });
   }
