@@ -20,6 +20,10 @@ export const pages = {
   clients: 'clients/index.html',
   contact: 'contact/index.html',
   privacy: 'privacy-policy/index.html',
+  insights: 'insights/index.html',
+  insight3dVsNormal: 'insights/3d-website-vs-normal-website/index.html',
+  insightFast3d: 'insights/fast-3d-website-on-phones/index.html',
+  insightHiringIndia: 'insights/hiring-a-developer-in-india/index.html',
   notFound: '404.html',
   admin: 'admin/index.html',
 };

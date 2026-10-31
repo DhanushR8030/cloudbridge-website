@@ -5,6 +5,7 @@
 ## Key facts
 - Company: CloudBridge Technologies
 - Location: Coimbatore, Tamil Nadu, India
+- Serves: clients in Coimbatore, across India and worldwide
 - Projects: 100+ projects delivered
 - Industries served: hospitality, construction, manufacturing, automotive, real estate and infrastructure, automation
 - Phone: +91 96775 63876
@@ -25,3 +26,8 @@
 - [Clients](https://cloudbridge-technologies.com/clients/)
 - [Process](https://cloudbridge-technologies.com/process/)
 - [Contact](https://cloudbridge-technologies.com/contact/)
+
+## Insights
+- [3D website vs normal website](https://cloudbridge-technologies.com/insights/3d-website-vs-normal-website/): when a 3D website is worth it and when a normal website is the better choice
+- [How we keep a 90,000-particle 3D website fast on budget phones](https://cloudbridge-technologies.com/insights/fast-3d-website-on-phones/): a performance case study with measured Lighthouse results
+- [Hiring a website or app developer in India from abroad](https://cloudbridge-technologies.com/insights/hiring-a-developer-in-india/): time zones, written scope, code ownership and how to check a team

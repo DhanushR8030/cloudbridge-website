@@ -50,7 +50,7 @@ function tiltCards() {
 function splitHeadings() {
   if (!('IntersectionObserver' in window)) return;
   // Only headings below the first screen, so the first view never flickers.
-  const heads = [...document.querySelectorAll('main h2')].filter((h) => !h.classList.contains('sr-only') && h.getBoundingClientRect().top > innerHeight * 0.92);
+  const heads = [...document.querySelectorAll('main h2')].filter((h) => !h.classList.contains('sr-only') && !h.closest('.prose') && h.getBoundingClientRect().top > innerHeight * 0.92);
   heads.forEach((h) => {
     let i = 0;
     const walk = (node) => {
