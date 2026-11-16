@@ -840,3 +840,19 @@ html.cursor-on select { cursor: pointer !important; }
   .prose--article { font-size: 1.04rem; }
   .prose--article > .lead { font-size: 1.15rem; }
 }
+
+
+/* ============================================================ every type of business */
+.biz-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.biz { padding: 24px 22px 24px; border-radius: 20px; background: rgba(255, 255, 255, .94); border: 1px solid var(--line); box-shadow: var(--shadow); transition: border-color .3s, box-shadow .45s var(--ease); }
+.biz:hover { border-color: rgba(34, 164, 71, .45); box-shadow: var(--shadow-lg); }
+.biz h3 { font-size: 1.08rem; letter-spacing: -.015em; margin-bottom: 10px; }
+.biz h3::before { content: ''; display: block; width: 22px; height: 3px; border-radius: 2px; background: var(--green); margin-bottom: 16px; }
+.biz p { margin: 0; font-size: .94rem; line-height: 1.55; color: var(--ink-2); }
+.biz-also { margin-top: 30px; }
+.biz-also__t { font: 600 .78rem var(--f-head); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); margin: 0 0 14px; }
+.biz-also .chips { list-style: none; margin: 0; padding: 0; }
+.biz-also .chips span { font-size: .86rem; padding: 10px 16px; }
+.biz-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; margin-top: 30px; }
+@media (max-width: 1000px) { .biz-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .biz-grid { grid-template-columns: 1fr; gap: 12px; } .biz { padding: 20px 18px; } }

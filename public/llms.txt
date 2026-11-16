@@ -18,7 +18,7 @@
 - [Website Development](https://cloudbridge-technologies.com/services/website-development/): business websites, landing pages, e-commerce stores and web portals, SEO-ready and mobile-first
 - [3D Website Development](https://cloudbridge-technologies.com/services/3d-website-development/): interactive WebGL / Three.js websites with live 3D, scroll animation and mouse interaction, tuned for phones
 - [Mobile App Development](https://cloudbridge-technologies.com/services/mobile-app-development/): native and cross-platform Android and iOS apps, including Play Store and App Store publishing
-- [Business Software](https://cloudbridge-technologies.com/services/business-software/): CRM, inventory, billing, dashboards and customer portals
+- [Business Software](https://cloudbridge-technologies.com/services/business-software/): billing and GST invoicing software, POS systems, inventory, CRM, ERP, payroll, booking systems, dashboards and customer portals for every type of business (retail, restaurants, hotels, wholesale, manufacturing, clinics, pharmacies, schools, construction and service businesses)
 - [Custom & Desktop Applications](https://cloudbridge-technologies.com/services/custom-applications/): Windows and macOS desktop software (C#, .NET, SQL Server), automation tools and secure access systems
 
 ## Pages
