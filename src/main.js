@@ -21,6 +21,17 @@ const track = (name, params = {}) => {
   else window.dataLayer.push({ event: name, ...params });
 };
 
+// Count every way a visitor gets in touch: WhatsApp, phone calls and email.
+document.addEventListener('click', (e) => {
+  const a = e.target.closest?.('a[href]');
+  if (!a) return;
+  const href = a.getAttribute('href') || '';
+  const where = a.closest('.floating-cta') ? 'floating_button' : a.closest('.site-footer') ? 'footer' : a.closest('.cta, #contact') ? 'contact_section' : 'page';
+  if (/^https:\/\/wa\.me\//.test(href)) track('contact_whatsapp', { link_location: where });
+  else if (href.startsWith('tel:')) track('contact_call', { link_location: where });
+  else if (href.startsWith('mailto:')) track('contact_email', { link_location: where });
+}, { capture: true, passive: true });
+
 /* ---- loading screen (home page, first visit of a session) */
 const preloader = document.getElementById('preloader');
 if (preloader && !root.classList.contains('preloading')) preloader.remove();

@@ -20,6 +20,10 @@
 - [Mobile App Development](https://cloudbridge-technologies.com/services/mobile-app-development/): native and cross-platform Android and iOS apps, including Play Store and App Store publishing
 - [Business Software](https://cloudbridge-technologies.com/services/business-software/): billing and GST invoicing software, POS systems, inventory, CRM, ERP, payroll, booking systems, dashboards and customer portals for every type of business (retail, restaurants, hotels, wholesale, manufacturing, clinics, pharmacies, schools, construction and service businesses)
 - [Custom & Desktop Applications](https://cloudbridge-technologies.com/services/custom-applications/): Windows and macOS desktop software (C#, .NET, SQL Server), automation tools and secure access systems
+- [Three.js & WebGL Development](https://cloudbridge-technologies.com/services/threejs-webgl-development/): custom real-time 3D scenes, particle systems, shaders, model viewers and Three.js performance tuning
+- [3D Product Configurators](https://cloudbridge-technologies.com/services/3d-product-configurator/): 3D product viewers and configurators where customers rotate, zoom and customise products online
+- [Billing Software](https://cloudbridge-technologies.com/services/billing-software/): custom GST billing software with barcode billing, stock, credit and reports
+- [POS Software](https://cloudbridge-technologies.com/services/pos-software/): POS software for retail shops, supermarkets, restaurants, cafés and hotels
 
 ## Pages
 - [About](https://cloudbridge-technologies.com/about/)
