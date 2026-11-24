@@ -20,7 +20,7 @@ export const SITE = {
   // one-time "confirm activation" email for that domain - that's expected, just click it once.
   formEndpoint: 'https://formsubmit.co/ajax/51309b29d18bcb53e3de407e361d3a97',
   // Google tag / Google Ads ID, e.g. 'G-XXXXXXXXXX' or 'AW-XXXXXXXXX'. Leave empty to disable tracking.
-  gtagId: '',
+  gtagId: 'G-0J0CFREBPJ',
   // While true, sections filled with sample content show a "Sample content" tag.
   // Nothing on the site is flagged as sample content right now.
   showSampleNotice: false,
